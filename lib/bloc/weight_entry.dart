@@ -50,7 +50,6 @@ class WeightEntryBloc extends Bloc {
   }
 
   void loadWeightEntries(int entriesToLoad) async {
-    print("Amazing");
     if (ledger == null) {
       return;
     }
@@ -58,8 +57,6 @@ class WeightEntryBloc extends Bloc {
     final entryKeys = ledger!.entries
         .where((element) => !loadedSet.contains(element))
         .take(entriesToLoad);
-
-    print(entryKeys);
 
     // TODO WB-1 Combine loading of values into one.
     final newLoadedEntries = await Future.wait(
@@ -90,8 +87,6 @@ class WeightEntryBloc extends Bloc {
 
     await repo.saveModel<WeightEntry>(weightDb, entry);
     await repo.saveModel<Ledger>(weightDb, ledger!);
-    print(ledger!.toMap());
-    print((await repo.findModel(weightDb, ledgerKey))?.toMap());
 
     updateBloc();
   }

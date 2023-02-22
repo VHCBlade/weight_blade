@@ -2,40 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:weight_blade/model/weight.dart';
 
 class WeightEntryModal extends StatefulWidget {
-  late final WeightEntry entry;
+  final WeightEntry? entry;
 
-  WeightEntryModal({super.key, WeightEntry? initialEntry}) {
-    entry = WeightEntry();
-    if (initialEntry != null) {
-      entry.copy(initialEntry);
-    }
-  }
+  const WeightEntryModal({super.key, this.entry});
 
   @override
   State<WeightEntryModal> createState() => _WeightEntryModalState();
 }
 
 class _WeightEntryModalState extends State<WeightEntryModal> {
-  late final controller = TextEditingController(text: "${widget.entry.weight}");
+  late final controller = TextEditingController(text: "${currentEntry.weight}");
   late final focusNode = FocusNode();
+  late final currentEntry = WeightEntry();
 
   @override
   void initState() {
     super.initState();
     focusNode.requestFocus();
+    if (widget.entry != null) {
+      currentEntry.copy(widget.entry!);
+    }
   }
 
   void onEditingComplete() {
     try {
-      widget.entry.weight = double.parse(controller.text);
+      currentEntry.weight = double.parse(controller.text);
     } on FormatException {
-      controller.text = "${widget.entry.weight}";
+      controller.text = "${currentEntry.weight}";
     }
   }
 
   void onSave() {
     onEditingComplete();
-    Navigator.of(context).pop(widget.entry);
+    Navigator.of(context).pop(currentEntry);
   }
 
   @override
@@ -55,11 +54,13 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
           ),
           const SizedBox(width: 10),
           ElevatedButton(
-              onPressed: () => setState(() => widget.entry.unit =
-                  widget.entry.unit == WeightUnit.lbs
-                      ? WeightUnit.kg
-                      : WeightUnit.lbs),
-              child: Text(widget.entry.unit.name))
+              onPressed: () {
+                currentEntry.unit = currentEntry.unit == WeightUnit.lbs
+                    ? WeightUnit.kg
+                    : WeightUnit.lbs;
+                setState(() {});
+              },
+              child: Text(currentEntry.unit.name))
         ]),
         actions: [
           OutlinedButton(

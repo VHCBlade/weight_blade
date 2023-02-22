@@ -60,7 +60,7 @@ class _WeightScreenState extends State<WeightScreen> {
           final entry = await showDialog(
               context: context,
               builder: (_) => WeightEntryModal(
-                  initialEntry: WeightEntry()
+                  entry: WeightEntry()
                     ..copy(weightBloc.latestEntry ?? WeightEntry())
                     ..id = null));
 

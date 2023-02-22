@@ -9,7 +9,7 @@ class MainTransferScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainNavigationFullScreenCarousel(
-        navigationOptions: const ["weigh", "sets", "import", "settings"],
+        navigationOptions: const ["weigh", "reminder", "settings"],
         navigationBuilder: (_, navigation) {
           switch (navigation) {
             case 'weigh':

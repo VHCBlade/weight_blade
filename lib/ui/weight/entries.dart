@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

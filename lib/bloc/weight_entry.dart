@@ -28,6 +28,8 @@ class WeightEntryBloc extends Bloc {
         WeightEvent.addWeightEntry.event, (p0, p1) => addWeightEntry(p1));
     eventChannel.addEventListener<WeightEntry>(
         WeightEvent.updateWeightEntry.event, (p0, p1) => updateWeightEntry(p1));
+    eventChannel.addEventListener<WeightEntry>(
+        WeightEvent.deleteWeightEntry.event, (p0, p1) => deleteWeightEntry(p1));
   }
 
   WeightEntry? get latestEntry =>
@@ -94,6 +96,17 @@ class WeightEntryBloc extends Bloc {
   void updateWeightEntry(WeightEntry entry) async {
     await repo.saveModel<WeightEntry>(weightDb, entry);
     weightEntryMap[entry.id!] = entry;
+
+    updateBloc();
+  }
+
+  void deleteWeightEntry(WeightEntry entry) async {
+    await repo.deleteModel<WeightEntry>(weightDb, entry);
+    weightEntryMap[entry.id!] = entry;
+
+    loadedEntries.remove(entry.id!);
+    ledger!.entries.remove(entry.id!);
+    await repo.saveModel<Ledger>(weightDb, ledger!);
 
     updateBloc();
   }

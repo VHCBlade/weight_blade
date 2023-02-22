@@ -25,7 +25,7 @@ class _WeightScreenState extends State<WeightScreen> {
           weightBloc.ledger!.currentWeightGoal);
     }
     if (weightBloc.loadedEntries.isEmpty) {
-      context.fireEvent<int>(WeightEvent.loadNWeightEntries.event, 10);
+      context.fireEvent<int>(WeightEvent.loadNWeightEntries.event, 20);
     }
 
     super.initState();

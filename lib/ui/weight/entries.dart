@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +33,7 @@ class _WeightEntryListState extends State<WeightEntryList> {
     }
 
     sentUpdateRequest = true;
-    context.fireEvent(WeightEvent.loadNWeightEntries.event, 10);
+    context.fireEvent(WeightEvent.loadNWeightEntries.event, 50);
 
     await Future.delayed(const Duration(seconds: 3));
     sentUpdateRequest = false;
@@ -62,6 +64,7 @@ class _WeightEntryListState extends State<WeightEntryList> {
         itemBuilder: (_, i) => i == weightBloc.loadedEntries.length
             ? const SizedBox(height: 80)
             : WeightEntryWidget(entry: weightBloc.entryAt(i)!),
+        physics: const AlwaysScrollableScrollPhysics(),
         controller: controller,
         itemCount: weightBloc.loadedEntries.length + 1);
   }
@@ -89,6 +92,10 @@ class WeightEntryWidget extends StatelessWidget {
                 ],
               ),
               Expanded(child: Container()),
+              IconButton(
+                  onPressed: () => context.fireEvent(
+                      WeightEvent.deleteWeightEntry.event, entry),
+                  icon: const Icon(Icons.delete)),
               ElevatedButton(
                   onPressed: () async {
                     final eventChannel = context.eventChannel;

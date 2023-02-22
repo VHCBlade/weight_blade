@@ -6,6 +6,7 @@ enum WeightEvent<T> {
   loadWeightGoal<String?>(),
   addWeightEntry<WeightEntry>(),
   updateWeightEntry<WeightEntry>(),
+  deleteWeightEntry<WeightEntry>(),
   ;
 
   BlocEventType<T> get event => BlocEventType.fromObject(this);

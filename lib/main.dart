@@ -1,9 +1,12 @@
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:event_navigation/event_navigation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
+import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/bloc_builders.dart';
+import 'package:weight_blade/event/ledger.dart';
 import 'package:weight_blade/main_transfer.dart';
 import 'package:weight_blade/repository_builders.dart';
 import 'package:vhcblade_theme/vhcblade_theme.dart';
@@ -27,7 +30,6 @@ class MyApp extends StatelessWidget {
         blocBuilders: blocBuilders,
         child: Builder(
           builder: (context) {
-            // context.fireEvent<void>(ReviewerEvent.loadReviewers.event, null);
             return EventNavigationApp(
               title: 'Weight Blade',
               theme: createTheme(),
@@ -50,10 +52,26 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.fireEvent<void>(LedgerEvent.loadLedger.event, null);
+  }
+
   Widget buildWidget(BuildContext context) {
+    final bloc = BlocProvider.watch<WeightEntryBloc>(context);
+
+    if (bloc.loading) {
+      return const Scaffold(body: Center(child: CupertinoActivityIndicator()));
+    }
     final navBloc = BlocProvider.watch<MainNavigationBloc<String>>(context);
 
     final navigationBar = MainNavigationBar(

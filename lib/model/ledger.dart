@@ -3,11 +3,14 @@ import 'package:tuple/tuple.dart';
 
 class Ledger extends GenericModel {
   List<String> entries = [];
+  String? currentWeightGoal;
 
   @override
   Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
-        "entry": Tuple2(
-            () => entries, (val) => entries = val.map<String>((a) => "$a"))
+        "entries": Tuple2(() => entries,
+            (val) => entries = val.map<String>((a) => "$a").toList()),
+        "weightGoal":
+            Tuple2(() => currentWeightGoal, (val) => currentWeightGoal = val),
       };
 
   @override

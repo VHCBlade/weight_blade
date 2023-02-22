@@ -125,10 +125,10 @@ packages:
     dependency: "direct main"
     description:
       name: event_hive
-      sha256: b0bce8dc676e10e757f0e2f9ae447bf2a81559ca7074a761cdefba8507d1de84
+      sha256: feceaa17b3273edb42b6c5c10818a472024823b6850c25db84af0bdbd3d276e4
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.2"
   event_navigation:
     dependency: "direct main"
     description:
@@ -456,6 +456,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  uuid:
+    dependency: "direct main"
+    description:
+      name: uuid
+      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7"
   vector_math:
     dependency: transitive
     description:

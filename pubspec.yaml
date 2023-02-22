@@ -19,7 +19,7 @@ dependencies:
   event_db: ^0.1.0
   # event_db:
   #   path: ../event_db
-  event_hive: ^0.1.0
+  event_hive: ^0.1.2
   # event_hive:
   #   path: ../event_hive
   event_navigation: ^0.6.2
@@ -36,6 +36,8 @@ dependencies:
   math_parser: ^1.5.0
   provider: ^6.0.0
   tuple: ^2.0.0
+
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

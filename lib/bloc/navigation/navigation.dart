@@ -1,7 +1,7 @@
 import 'package:event_navigation/event_navigation.dart';
 import 'package:event_bloc/event_bloc.dart';
 
-const POSSIBLE_NAVIGATIONS = <String>{
+const possibleNavigations = <String>{
   "weigh",
   "reminder",
   "import",
@@ -14,7 +14,7 @@ MainNavigationBloc<String> generateNavigationBloc(
   final bloc = MainNavigationBloc<String>(
     parentChannel: parentChannel,
     strategy: ListNavigationStrategy(
-      possibleNavigations: POSSIBLE_NAVIGATIONS.toList(),
+      possibleNavigations: possibleNavigations.toList(),
       defaultNavigation: 'weigh',
       navigationOnError: 'error',
     ),

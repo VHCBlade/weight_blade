@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_blade/model/goal.dart';
 import 'package:weight_blade/model/weight.dart';
 
 class WeightEntryModal extends StatefulWidget {
@@ -79,5 +80,61 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
               child: const Text("Cancel")),
           ElevatedButton(onPressed: onSave, child: const Text("Save")),
         ]);
+  }
+}
+
+class WeightGoalModal extends StatefulWidget {
+  final WeightGoal? goal;
+  const WeightGoalModal({super.key, this.goal});
+
+  @override
+  State<WeightGoalModal> createState() => _WeightGoalModalState();
+}
+
+class _WeightGoalModalState extends State<WeightGoalModal> {
+  late final WeightEntry? entry;
+  late final WeightGoal goal;
+
+  @override
+  void initState() {
+    if (widget.goal == null) {
+      entry = null;
+    } else {
+      entry = WeightEntry();
+      entry!.unit = widget.goal!.unit;
+      entry!.weight = widget.goal!.weight;
+    }
+    goal = widget.goal ?? WeightGoal();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WeightEntryModal(
+      entry: entry,
+      extraContent: Padding(
+        padding: const EdgeInsets.only(top: 13),
+        child: Row(
+          children: [
+            const Text("I want to "),
+            ElevatedButton(
+                onPressed: () {
+                  goal.direction = goal.direction == TargetDirection.gain
+                      ? TargetDirection.lose
+                      : TargetDirection.gain;
+                  setState(() {});
+                },
+                child: Text(goal.direction.name)),
+            const Text(" weight."),
+          ],
+        ),
+      ),
+      onSave: (entry) {
+        goal.unit = entry.unit;
+        goal.weight = entry.weight;
+        return Navigator.of(context).pop(goal);
+      },
+      title: const Text("Set Goal"),
+    );
   }
 }

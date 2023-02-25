@@ -4,6 +4,7 @@ import 'package:weight_blade/bloc/goal.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/event/goal.dart';
 import 'package:weight_blade/event/weight.dart';
+import 'package:weight_blade/model/goal.dart';
 import 'package:weight_blade/ui/weight/entries.dart';
 import 'package:weight_blade/ui/weight/goal.dart';
 import 'package:weight_blade/ui/weight/modal.dart';
@@ -44,8 +45,23 @@ class _WeightScreenState extends State<WeightScreen> {
         title: WeightGoalText(goal: goal),
         actions: [
           IconButton(
-            // TODO Add event for adding the weight goal
-            onPressed: () => context,
+            onPressed: () async {
+              final eventChannel = context.eventChannel;
+              final noCurrentGoal = goal == null;
+              final newGoal = await showDialog<WeightGoal>(
+                  context: context,
+                  builder: (_) => WeightGoalModal(goal: goal));
+
+              if (newGoal == null) {
+                return;
+              }
+
+              eventChannel.fireEvent<WeightGoal>(
+                  noCurrentGoal
+                      ? GoalEvent.addWeightGoal.event
+                      : GoalEvent.updateWeightGoal.event,
+                  newGoal);
+            },
             icon: (goal == null || goal.dateAccomplished != null)
                 ? const Icon(Icons.add)
                 : const Icon(Icons.edit),

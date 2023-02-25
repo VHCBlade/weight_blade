@@ -28,8 +28,13 @@ class WeightEntryBloc extends Bloc {
   bool get noEntries => ledger?.entries.isEmpty ?? true;
 
   WeightEntryBloc({required super.parentChannel, required this.repo}) {
-    eventChannel.addEventListener(
+    eventChannel.addEventListener<void>(
         LedgerEvent.loadLedger.event, (p0, p1) => loadLedger());
+    eventChannel.addEventListener<Ledger>(
+        LedgerEvent.updateLedger.event, (p0, p1) => updateLedger(p1));
+    eventChannel.addEventListener<String>(
+        LedgerEvent.updateGoal.event, (p0, p1) => updateLedgerGoal(p1));
+
     eventChannel.addEventListener<int>(WeightEvent.loadNWeightEntries.event,
         (p0, p1) => loadWeightEntries(p1));
     eventChannel.addEventListener<WeightEntry>(
@@ -63,6 +68,20 @@ class WeightEntryBloc extends Bloc {
     updateBloc();
     ledger = await repo.findModel<Ledger>(weightDb, ledgerKey);
     loading = false;
+    updateBloc();
+  }
+
+  void updateLedgerGoal(String goal) async {
+    if (ledger == null) {
+      return;
+    }
+    updateLedger(ledger!..currentWeightGoal = goal);
+  }
+
+  void updateLedger(Ledger ledger) async {
+    ledger.id = ledgerKey;
+    this.ledger = ledger;
+    await repo.saveModel<Ledger>(weightDb, ledger);
     updateBloc();
   }
 

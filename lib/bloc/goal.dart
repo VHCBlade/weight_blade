@@ -40,6 +40,8 @@ class WeightGoalBloc extends Bloc {
     weightGoal.id ??= const Uuid().v4();
     await repo.saveModel<WeightGoal>(weightDb, weightGoal);
     weightGoalMap[weightGoal.id!] = weightGoal;
+    eventChannel.fireEvent<String>(
+        LedgerEvent.updateGoal.event, weightGoal.id!);
     updateBloc();
   }
 }

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:event_bloc/event_bloc.dart';
 import 'package:event_db/event_db.dart';
+import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 import 'package:weight_blade/event/ledger.dart';
 import 'package:weight_blade/event/weight.dart';
@@ -11,6 +14,11 @@ const ledgerKey = "Ledger";
 
 class WeightEntryBloc extends Bloc {
   final DatabaseRepository repo;
+  final _addedWeight = StreamController<int>.broadcast();
+  final _removedWeight = StreamController<Tuple2<int, WeightEntry>>.broadcast();
+
+  Stream<int> get addedWeightIndex => _addedWeight.stream;
+  Stream<Tuple2<int, WeightEntry>> get removedWeight => _removedWeight.stream;
 
   Ledger? ledger;
   final loadedEntries = <String>[];
@@ -30,6 +38,13 @@ class WeightEntryBloc extends Bloc {
         WeightEvent.updateWeightEntry.event, (p0, p1) => updateWeightEntry(p1));
     eventChannel.addEventListener<WeightEntry>(
         WeightEvent.deleteWeightEntry.event, (p0, p1) => deleteWeightEntry(p1));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _addedWeight.close();
+    _removedWeight.close();
   }
 
   WeightEntry? get latestEntry =>
@@ -88,6 +103,7 @@ class WeightEntryBloc extends Bloc {
     ledger!.entries.insert(0, entry.id!);
 
     await repo.saveModel<WeightEntry>(weightDb, entry);
+    _addedWeight.sink.add(0);
     await repo.saveModel<Ledger>(weightDb, ledger!);
 
     updateBloc();
@@ -104,7 +120,11 @@ class WeightEntryBloc extends Bloc {
     await repo.deleteModel<WeightEntry>(weightDb, entry);
     weightEntryMap[entry.id!] = entry;
 
-    loadedEntries.remove(entry.id!);
+    final location = loadedEntries.indexOf(entry.id!);
+    if (location >= 0) {
+      loadedEntries.removeAt(location);
+      _removedWeight.add(Tuple2(location, entry));
+    }
     ledger!.entries.remove(entry.id!);
     await repo.saveModel<Ledger>(weightDb, ledger!);
 

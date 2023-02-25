@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,11 +20,28 @@ class WeightEntryList extends StatefulWidget {
 class _WeightEntryListState extends State<WeightEntryList> {
   late final controller = ScrollController();
   bool sentUpdateRequest = false;
+  final listKey = GlobalKey<AnimatedListState>();
+  final subscriptions = <StreamSubscription>[];
 
   @override
   void initState() {
     super.initState();
     controller.addListener(listener);
+    final bloc = context.readBloc<WeightEntryBloc>();
+    subscriptions.add(bloc.addedWeightIndex
+        .listen((event) => listKey.currentState?.insertItem(event)));
+    subscriptions.add(
+      bloc.removedWeight.listen(
+        (event) => listKey.currentState?.removeItem(
+          event.item1,
+          (_, animation) => SizeTransition(
+            axisAlignment: 1.0,
+            sizeFactor: animation,
+            child: WeightEntryWidget(entry: event.item2),
+          ),
+        ),
+      ),
+    );
   }
 
   void listener() async {
@@ -41,6 +60,7 @@ class _WeightEntryListState extends State<WeightEntryList> {
   void dispose() {
     super.dispose();
     controller.dispose();
+    subscriptions.forEach((element) => element.cancel());
   }
 
   @override
@@ -58,13 +78,18 @@ class _WeightEntryListState extends State<WeightEntryList> {
           : Container();
     }
 
-    return ListView.builder(
-        itemBuilder: (_, i) => i == weightBloc.loadedEntries.length
-            ? const SizedBox(height: 80)
-            : WeightEntryWidget(entry: weightBloc.entryAt(i)!),
+    return AnimatedList(
+        key: listKey,
+        itemBuilder: (_, i, animation) => SizeTransition(
+              sizeFactor: animation,
+              axisAlignment: 1.0,
+              child: i == weightBloc.loadedEntries.length
+                  ? const SizedBox(height: 80)
+                  : WeightEntryWidget(entry: weightBloc.entryAt(i)!),
+            ),
         physics: const AlwaysScrollableScrollPhysics(),
         controller: controller,
-        itemCount: weightBloc.loadedEntries.length + 1);
+        initialItemCount: weightBloc.loadedEntries.length + 1);
   }
 }
 

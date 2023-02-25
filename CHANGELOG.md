@@ -1,3 +1,8 @@
+## 1.2.0
+
+- Added Delete and Add Animation
+- Added Goal Feature
+
 ## 1.1.0
 
 - Fixed Reminder not being animated correctly. 

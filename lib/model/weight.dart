@@ -32,6 +32,8 @@ class WeightEntry extends GenericModel {
 
   double get weightInPounds => unit.convertToLbs(weight);
 
+  double weightInUnits(WeightUnit unit) => unit.convertFromLbs(weightInPounds);
+
   @override
   Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
         "unit": GenericModel.convertEnumToString(() => unit,

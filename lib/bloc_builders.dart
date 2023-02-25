@@ -12,4 +12,11 @@ final blocBuilders = [
       parentChannel: channel, repo: read.read<DatabaseRepository>())),
   BlocBuilder<WeightGoalBloc>((read, channel) => WeightGoalBloc(
       parentChannel: channel, repo: read.read<DatabaseRepository>())),
+  BlocBuilder<WeightGoalWatcherBloc>(
+    (read, channel) => WeightGoalWatcherBloc(
+      parentChannel: channel,
+      weightEntry: read.read<WeightEntryBloc>(),
+      weightGoal: read.read<WeightGoalBloc>(),
+    ),
+  ),
 ];

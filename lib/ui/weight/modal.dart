@@ -5,9 +5,10 @@ class WeightEntryModal extends StatefulWidget {
   final WeightEntry? entry;
   final void Function(WeightEntry)? onSave;
   final Widget? extraContent;
+  final Widget? title;
 
   const WeightEntryModal(
-      {super.key, this.entry, this.onSave, this.extraContent});
+      {super.key, this.entry, this.onSave, this.extraContent, this.title});
 
   @override
   State<WeightEntryModal> createState() => _WeightEntryModalState();
@@ -47,8 +48,8 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: const Text("Set Weight"),
-        content: Column(children: [
+        title: widget.title ?? const Text("Set Weight"),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
           Row(children: [
             Expanded(
               child: TextField(

@@ -2,6 +2,7 @@ import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_blade/bloc/goal.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
+import 'package:weight_blade/event/goal.dart';
 import 'package:weight_blade/event/weight.dart';
 import 'package:weight_blade/ui/weight/entries.dart';
 import 'package:weight_blade/ui/weight/goal.dart';
@@ -21,8 +22,8 @@ class _WeightScreenState extends State<WeightScreen> {
   void initState() {
     final weightBloc = context.readBloc<WeightEntryBloc>();
     if (weightBloc.ledger != null) {
-      context.fireEvent<String?>(WeightEvent.loadWeightGoal.event,
-          weightBloc.ledger!.currentWeightGoal);
+      context.fireEvent<String?>(
+          GoalEvent.loadWeightGoal.event, weightBloc.ledger!.currentWeightGoal);
     }
     if (weightBloc.loadedEntries.isEmpty) {
       context.fireEvent<int>(WeightEvent.loadNWeightEntries.event, 20);

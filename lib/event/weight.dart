@@ -3,7 +3,6 @@ import 'package:weight_blade/model/weight.dart';
 
 enum WeightEvent<T> {
   loadNWeightEntries<int>(),
-  loadWeightGoal<String?>(),
   addWeightEntry<WeightEntry>(),
   updateWeightEntry<WeightEntry>(),
   deleteWeightEntry<WeightEntry>(),

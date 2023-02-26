@@ -3,9 +3,13 @@ import 'package:tuple/tuple.dart';
 import 'package:weight_blade/model/weight.dart';
 
 enum TargetDirection {
-  lose,
-  gain,
+  lose("losing"),
+  gain("gaining"),
   ;
+
+  final String action;
+
+  const TargetDirection(this.action);
 }
 
 class WeightGoal extends GenericModel {
@@ -13,6 +17,7 @@ class WeightGoal extends GenericModel {
   TargetDirection direction = TargetDirection.lose;
 
   double weight = 0;
+  DateTime? dateStarted = DateTime.now();
   DateTime? dateAccomplished;
 
   bool get accomplished => dateAccomplished != null;
@@ -46,6 +51,10 @@ class WeightGoal extends GenericModel {
         "accomplished": Tuple2(
             () => dateAccomplished?.microsecondsSinceEpoch,
             (val) => dateAccomplished =
+                val == null ? null : DateTime.fromMicrosecondsSinceEpoch(val!)),
+        "started": Tuple2(
+            () => dateStarted?.microsecondsSinceEpoch,
+            (val) => dateStarted =
                 val == null ? null : DateTime.fromMicrosecondsSinceEpoch(val!)),
       };
 

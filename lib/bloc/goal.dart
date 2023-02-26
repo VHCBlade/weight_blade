@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:event_bloc/event_bloc.dart';
 import 'package:event_db/event_db.dart';
 import 'package:uuid/uuid.dart';
@@ -20,8 +22,8 @@ class WeightGoalBloc extends Bloc {
         GoalEvent.loadWeightGoal.event, (p0, p1) => loadWeightGoal(p1));
     eventChannel.addEventListener<WeightGoal>(
         GoalEvent.addWeightGoal.event, (p0, p1) => updateWeightGoal(p1));
-    eventChannel.addEventListener<WeightGoal>(
-        GoalEvent.updateWeightGoal.event, (p0, p1) => updateWeightGoal(p1));
+    eventChannel.addEventListener<WeightGoal>(GoalEvent.updateWeightGoal.event,
+        (p0, p1) => updateWeightGoal(p1, false));
   }
 
   void loadWeightGoal(String? id) async {
@@ -36,19 +38,27 @@ class WeightGoalBloc extends Bloc {
     updateBloc();
   }
 
-  void updateWeightGoal(WeightGoal weightGoal) async {
+  void updateWeightGoal(WeightGoal weightGoal,
+      [bool setAsCurrentGoal = true]) async {
     weightGoal.id ??= const Uuid().v4();
-    await repo.saveModel<WeightGoal>(weightDb, weightGoal);
     weightGoalMap[weightGoal.id!] = weightGoal;
-    eventChannel.fireEvent<String>(
-        LedgerEvent.updateGoal.event, weightGoal.id!);
+    print(setAsCurrentGoal);
+    if (setAsCurrentGoal) {
+      eventChannel.fireEvent<String>(
+          LedgerEvent.updateGoal.event, weightGoal.id!);
+    }
     updateBloc();
+    await repo.saveModel<WeightGoal>(weightDb, weightGoal);
   }
 }
 
 class WeightGoalWatcherBloc extends Bloc {
   final WeightGoalBloc weightGoal;
   final WeightEntryBloc weightEntry;
+
+  late final _finishedGoal = StreamController<WeightGoal>.broadcast();
+
+  Stream<WeightGoal> get finishedGoal => _finishedGoal.stream;
 
   WeightGoal? get goal =>
       weightGoal.weightGoalMap[weightEntry.ledger?.currentWeightGoal];
@@ -78,7 +88,7 @@ class WeightGoalWatcherBloc extends Bloc {
 
     eventChannel.fireEvent(LedgerEvent.updateLedger.event, ledger);
     eventChannel.fireEvent(GoalEvent.updateWeightGoal.event, currentGoal);
-
+    _finishedGoal.sink.add(currentGoal);
     updateBloc();
   }
 
@@ -95,6 +105,7 @@ class WeightGoalWatcherBloc extends Bloc {
   void dispose() {
     weightGoal.blocUpdated.remove(_update);
     weightEntry.blocUpdated.remove(_update);
+    _finishedGoal.close();
     super.dispose();
   }
 }

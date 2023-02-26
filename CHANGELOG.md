@@ -1,6 +1,8 @@
 ## 1.2.1
 
+- Fixed Strange Behavior with finished goal.
 - Fixed Issue with loading goal on startup.
+- Added Message telling you that you've reached your goal.
 - Added Animation to the app loading for the first time.
 - Added Ability to show licenses.
 

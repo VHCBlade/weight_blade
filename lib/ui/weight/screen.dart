@@ -62,9 +62,7 @@ class _WeightScreenState extends State<WeightScreen> {
                       : GoalEvent.updateWeightGoal.event,
                   newGoal);
             },
-            icon: (goal == null || goal.dateAccomplished != null)
-                ? const Icon(Icons.add)
-                : const Icon(Icons.edit),
+            icon: goal == null ? const Icon(Icons.add) : const Icon(Icons.edit),
           )
         ],
       ),

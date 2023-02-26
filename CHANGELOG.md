@@ -1,3 +1,9 @@
+## 1.2.1
+
+- Fixed Issue with loading goal on startup.
+- Added Animation to the app loading for the first time.
+- Added Ability to show licenses.
+
 ## 1.2.0
 
 - Added Delete and Add Animation

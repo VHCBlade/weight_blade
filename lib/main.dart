@@ -60,6 +60,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late final _loading = GlobalKey(debugLabel: "Initial Loading");
+  late final _main = GlobalKey(debugLabel: "Main Parent");
   @override
   void initState() {
     super.initState();
@@ -70,7 +72,9 @@ class _MainScreenState extends State<MainScreen> {
     final bloc = BlocProvider.watch<WeightEntryBloc>(context);
 
     if (bloc.loading) {
-      return const Scaffold(body: Center(child: CupertinoActivityIndicator()));
+      return Scaffold(
+          key: _loading,
+          body: const Center(child: CupertinoActivityIndicator()));
     }
     final navBloc = BlocProvider.watch<MainNavigationBloc<String>>(context);
 
@@ -92,6 +96,7 @@ class _MainScreenState extends State<MainScreen> {
     );
 
     return Scaffold(
+      key: _main,
       bottomNavigationBar: navigationBar,
       body: const MainTransferScreen(),
     );
@@ -100,7 +105,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return FadeThroughWidgetSwitcher(
-      duration: const Duration(milliseconds: 900),
+      duration: const Duration(milliseconds: 1000),
       builder: (context) => buildWidget(context),
     );
   }

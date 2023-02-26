@@ -28,7 +28,7 @@ class WeightGoalBloc extends Bloc {
     if (id == null) {
       return;
     }
-    final goal = await repo.findModel<WeightGoal>(weightDb, ledgerKey);
+    final goal = await repo.findModel<WeightGoal>(weightDb, id);
     if (goal == null) {
       return;
     }

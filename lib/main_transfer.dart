@@ -1,6 +1,7 @@
 import 'package:event_navigation/event_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_blade/ui/coming_soon.dart';
+import 'package:weight_blade/ui/settings/screen.dart';
 import 'package:weight_blade/ui/weight/screen.dart';
 
 class MainTransferScreen extends StatelessWidget {
@@ -14,8 +15,9 @@ class MainTransferScreen extends StatelessWidget {
           switch (navigation) {
             case 'weigh':
               return const WeightScreen();
-            case 'reminder':
             case 'settings':
+              return const SettingsScreen();
+            case 'reminder':
             default:
               return const ComingSoonScreen();
           }

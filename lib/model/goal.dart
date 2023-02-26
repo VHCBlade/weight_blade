@@ -45,8 +45,8 @@ class WeightGoal extends GenericModel {
         "weight": Tuple2(() => weight, (val) => weight = val),
         "accomplished": Tuple2(
             () => dateAccomplished?.microsecondsSinceEpoch,
-            (val) =>
-                dateAccomplished = DateTime.fromMicrosecondsSinceEpoch(val!)),
+            (val) => dateAccomplished =
+                val == null ? null : DateTime.fromMicrosecondsSinceEpoch(val!)),
       };
 
   @override

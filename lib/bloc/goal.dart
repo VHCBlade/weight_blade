@@ -42,7 +42,6 @@ class WeightGoalBloc extends Bloc {
       [bool setAsCurrentGoal = true]) async {
     weightGoal.id ??= const Uuid().v4();
     weightGoalMap[weightGoal.id!] = weightGoal;
-    print(setAsCurrentGoal);
     if (setAsCurrentGoal) {
       eventChannel.fireEvent<String>(
           LedgerEvent.updateGoal.event, weightGoal.id!);

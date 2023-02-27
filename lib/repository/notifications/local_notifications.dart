@@ -2,12 +2,14 @@ import 'package:event_bloc/event_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:timezone/standalone.dart';
+import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart';
 import 'package:weight_blade/model/reminder.dart';
+import 'package:timezone/data/latest.dart';
 import 'package:weight_blade/repository/notifications/model.dart';
 import 'package:weight_blade/repository/notifications/repo.dart';
 
-class LocalNotificationsRepository extends NotificationsRepository {
+class LocalNotificationRepository extends NotificationRepository {
   late final FlutterLocalNotificationsPlugin plugin =
       FlutterLocalNotificationsPlugin();
 
@@ -17,7 +19,7 @@ class LocalNotificationsRepository extends NotificationsRepository {
 
   @override
   Future<void> initialize(BlocEventChannel channel) async {
-    await initializeTimeZone();
+    initializeTimeZones();
     super.initialize(channel);
   }
 
@@ -42,8 +44,9 @@ class LocalNotificationsRepository extends NotificationsRepository {
 
     const settings =
         InitializationSettings(android: androidSettings, iOS: iosSettings);
+    final initialized = await plugin.initialize(settings);
 
-    return (await plugin.initialize(settings)) ?? false;
+    return initialized ?? false;
   }
 
   @override
@@ -55,13 +58,17 @@ class LocalNotificationsRepository extends NotificationsRepository {
     for (final day in reminder.daysOfTheWeek) {
       DateTime currentDay = DateTime.now();
       currentDay.weekday;
+      print(DateFormat.yMEd()
+          .add_jms()
+          .format(getNextDayOfTheWeekAndTime(day, reminder.timeOfDay)));
       plugin.zonedSchedule(
         idFromReminder(reminder, day),
         "Weigh-in Reminder",
         "This is to remind you of your regularly scheduled weigh in!",
         TZDateTime.from(getNextDayOfTheWeekAndTime(day, reminder.timeOfDay),
             getLocation(await FlutterNativeTimezone.getLocalTimezone())),
-        const NotificationDetails(),
+        const NotificationDetails(
+            android: AndroidNotificationDetails("WeightBlade", "WeightBlade")),
         androidAllowWhileIdle: true,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
         uiLocalNotificationDateInterpretation:

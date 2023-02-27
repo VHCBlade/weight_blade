@@ -9,7 +9,7 @@ const _reminderId = "Reminder";
 
 class ReminderBloc extends Bloc {
   final DatabaseRepository databaseRepository;
-  final NotificationsRepository notificationsRepository;
+  final NotificationRepository notificationsRepository;
   Reminder? reminder;
   bool loading = false;
 

@@ -7,6 +7,7 @@ import 'package:vhcblade_theme/vhcblade_widget.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/bloc_builders.dart';
 import 'package:weight_blade/event/ledger.dart';
+import 'package:weight_blade/event/reminder.dart';
 import 'package:weight_blade/main_transfer.dart';
 import 'package:weight_blade/repository_builders.dart';
 import 'package:vhcblade_theme/vhcblade_theme.dart';
@@ -66,6 +67,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     context.fireEvent<void>(LedgerEvent.loadLedger.event, null);
+    context.fireEvent<void>(ReminderEvent.loadReminder.event, null);
   }
 
   Widget buildWidget(BuildContext context) {

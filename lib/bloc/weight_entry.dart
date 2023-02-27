@@ -81,7 +81,6 @@ class WeightEntryBloc extends Bloc {
   void updateLedger(Ledger ledger) async {
     ledger.id = ledgerKey;
     this.ledger = ledger;
-    print("Ledger Weight Goal - ${this.ledger?.currentWeightGoal}");
     updateBloc();
     await repo.saveModel<Ledger>(weightDb, ledger);
   }

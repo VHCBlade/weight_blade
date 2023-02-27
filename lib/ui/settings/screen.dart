@@ -15,6 +15,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 10),
             Text("Weight Blade",
                 style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: 10),
           ]),
           ListTile(
               title: const Text("Show Licenses"),

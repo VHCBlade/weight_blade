@@ -1,6 +1,8 @@
+import 'package:event_bloc/event_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:timezone/standalone.dart';
 import 'package:weight_blade/model/reminder.dart';
 import 'package:weight_blade/repository/notifications/model.dart';
 import 'package:weight_blade/repository/notifications/repo.dart';
@@ -11,6 +13,12 @@ class LocalNotificationsRepository extends NotificationsRepository {
 
   int idFromReminder(Reminder reminder, DayOfTheWeek day) {
     return "${reminder.id}${day.name}".hashCode;
+  }
+
+  @override
+  Future<void> initialize(BlocEventChannel channel) async {
+    await initializeTimeZone();
+    super.initialize(channel);
   }
 
   @override
@@ -39,7 +47,7 @@ class LocalNotificationsRepository extends NotificationsRepository {
   }
 
   @override
-  Future<bool> setReminder(Reminder? reminder, Location location) async {
+  Future<bool> setReminder(Reminder? reminder) async {
     if (reminder == null) {
       return false;
     }
@@ -51,8 +59,8 @@ class LocalNotificationsRepository extends NotificationsRepository {
         idFromReminder(reminder, day),
         "Weigh-in Reminder",
         "This is to remind you of your regularly scheduled weigh in!",
-        TZDateTime.from(
-            getNextDayOfTheWeekAndTime(day, reminder.timeOfDay), location),
+        TZDateTime.from(getNextDayOfTheWeekAndTime(day, reminder.timeOfDay),
+            getLocation(await FlutterNativeTimezone.getLocalTimezone())),
         const NotificationDetails(),
         androidAllowWhileIdle: true,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,

@@ -6,7 +6,7 @@ abstract class NotificationsRepository extends Repository {
   @override
   List<BlocEventListener> generateListeners(BlocEventChannel channel) => [];
   Future<bool> enableNotifications();
-  Future<bool> setReminder(Reminder? reminder, Location location);
+  Future<bool> setReminder(Reminder? reminder);
   Future<bool> disableNotifications(Reminder? reminder);
 }
 
@@ -22,7 +22,7 @@ class FakeNotificationsRepository extends NotificationsRepository {
   }
 
   @override
-  Future<bool> setReminder(Reminder? reminder, Location location) async {
+  Future<bool> setReminder(Reminder? reminder) async {
     return true;
   }
 }

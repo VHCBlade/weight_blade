@@ -31,6 +31,7 @@ dependencies:
   #   path: ../vhcblade_theme
 
   flutter_markdown: ^0.6.13
+  flutter_native_timezone: ^2.0.0
   flutter_local_notifications: ^13.0.0
   
   intl: ^0.18.0

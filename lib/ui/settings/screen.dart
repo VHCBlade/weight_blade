@@ -9,6 +9,13 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(title: const Text("Settings")),
       body: ListView(
         children: [
+          Column(children: [
+            const SizedBox(height: 20),
+            Image.asset("icons/180x180.png"),
+            const SizedBox(height: 10),
+            Text("Weight Blade",
+                style: Theme.of(context).textTheme.headlineMedium),
+          ]),
           ListTile(
               title: const Text("Show Licenses"),
               onTap: () => showLicensePage(context: context)),

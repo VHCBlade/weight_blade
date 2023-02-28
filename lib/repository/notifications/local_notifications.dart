@@ -2,7 +2,6 @@ import 'package:event_bloc/event_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart';
 import 'package:weight_blade/model/reminder.dart';
 import 'package:timezone/data/latest.dart';
@@ -58,17 +57,20 @@ class LocalNotificationRepository extends NotificationRepository {
     for (final day in reminder.daysOfTheWeek) {
       DateTime currentDay = DateTime.now();
       currentDay.weekday;
-      print(DateFormat.yMEd()
-          .add_jms()
-          .format(getNextDayOfTheWeekAndTime(day, reminder.timeOfDay)));
       plugin.zonedSchedule(
         idFromReminder(reminder, day),
         "Weigh-in Reminder",
-        "This is to remind you of your regularly scheduled weigh in!",
+        "Time to weigh in!",
         TZDateTime.from(getNextDayOfTheWeekAndTime(day, reminder.timeOfDay),
             getLocation(await FlutterNativeTimezone.getLocalTimezone())),
         const NotificationDetails(
-            android: AndroidNotificationDetails("WeightBlade", "WeightBlade")),
+            android: AndroidNotificationDetails(
+          "Weekly Reminder",
+          "Weekly Reminder",
+          icon: '@mipmap/notification',
+          importance: Importance.high,
+          priority: Priority.high,
+        )),
         androidAllowWhileIdle: true,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
         uiLocalNotificationDateInterpretation:

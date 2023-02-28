@@ -17,8 +17,9 @@ class Reminder extends GenericModel {
                 minute: int.parse(val.split(":")[1]))),
         "daysOfTheWeek": Tuple2(
             () => daysOfTheWeek.map((e) => e.name).toList(),
-            (val) => daysOfTheWeek =
-                val.map<DayOfTheWeek>((e) => daysOfTheWeek.byName(e)).toSet()),
+            (val) => daysOfTheWeek = val
+                .map<DayOfTheWeek>((e) => DayOfTheWeek.values.byName(e))
+                .toSet()),
         "enabled": Tuple2(() => enabled, (val) => enabled = val),
       };
 

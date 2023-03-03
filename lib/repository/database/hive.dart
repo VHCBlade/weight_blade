@@ -1,4 +1,5 @@
 import 'package:event_hive/event_hive.dart';
+import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:weight_blade/model/goal.dart';
 import 'package:weight_blade/model/ledger.dart';
 import 'package:weight_blade/model/reminder.dart';
@@ -9,4 +10,5 @@ final typeAdapters = <GenericTypeAdapter>[
   GenericTypeAdapter<Ledger>(() => Ledger(), (_) => 2),
   GenericTypeAdapter<WeightGoal>(() => WeightGoal(), (_) => 3),
   GenericTypeAdapter<Reminder>(() => Reminder(), (_) => 4),
+  GenericTypeAdapter<SelectedTheme>(() => SelectedTheme(), (_) => 5),
 ];

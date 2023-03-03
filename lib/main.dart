@@ -3,6 +3,7 @@ import 'package:event_navigation/event_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/bloc_builders.dart';
@@ -10,7 +11,6 @@ import 'package:weight_blade/event/ledger.dart';
 import 'package:weight_blade/event/reminder.dart';
 import 'package:weight_blade/main_transfer.dart';
 import 'package:weight_blade/repository_builders.dart';
-import 'package:vhcblade_theme/vhcblade_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,24 +29,22 @@ class MyApp extends StatelessWidget {
       repositoryBuilders: pocRepositoryBuilders,
       child: MultiBlocProvider(
         blocBuilders: blocBuilders,
-        child: Builder(
-          builder: (context) {
-            return EventNavigationApp(
-              title: 'Weight Blade',
-              theme: createTheme(),
-              builder: (_) => Overlay(
-                initialEntries: [
-                  OverlayEntry(
-                    builder: (context) => Navigator(
-                      onGenerateRoute: (_) => MaterialPageRoute(
-                        builder: (_) => const MainScreen(),
-                      ),
+        child: VHCBladeThemeBuilder(
+          builder: (context, theme) => EventNavigationApp(
+            title: 'Weight Blade',
+            theme: theme,
+            builder: (_) => Overlay(
+              initialEntries: [
+                OverlayEntry(
+                  builder: (context) => Navigator(
+                    onGenerateRoute: (_) => MaterialPageRoute(
+                      builder: (_) => const MainScreen(),
                     ),
                   ),
-                ],
-              ),
-            );
-          },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

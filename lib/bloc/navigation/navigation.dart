@@ -1,5 +1,6 @@
 import 'package:event_navigation/event_navigation.dart';
 import 'package:event_bloc/event_bloc.dart';
+import 'package:weight_blade/bloc/navigation/settings.dart';
 
 const possibleNavigations = <String>{
   "weigh",
@@ -20,6 +21,8 @@ MainNavigationBloc<String> generateNavigationBloc(
     ),
     undoStrategy: UndoRedoMainNavigationStrategy(),
   );
+
+  bloc.deepNavigationStrategyMap["settings"] = SettingsDeepNavigationStrategy();
 
   return bloc;
 }

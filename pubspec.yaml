@@ -26,7 +26,7 @@ dependencies:
   # event_navigation:
   #   path: ../event-navigation
 
-  vhcblade_theme: ^0.1.1
+  vhcblade_theme: ^0.2.0
   # vhcblade_theme:
   #   path: ../vhcblade_theme
 

@@ -601,10 +601,10 @@ packages:
     dependency: "direct main"
     description:
       name: vhcblade_theme
-      sha256: ed3422e28fd9c46eac7b3a777eab57b942d6eafe0636b66bac206cd7d8ea9abc
+      sha256: a542512ac8d325bbde47431c84d4ee382aa8d53c1b3fd6f66c03307feb24edf6
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.2.0"
   win32:
     dependency: transitive
     description:

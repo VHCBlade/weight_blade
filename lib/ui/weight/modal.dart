@@ -25,7 +25,7 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
     super.initState();
     focusNode.requestFocus();
     if (widget.entry != null) {
-      currentEntry.copy(widget.entry!);
+      currentEntry.copy(widget.entry!, exceptFields: ["note"]);
     }
   }
 

@@ -34,6 +34,14 @@ class WeightEntry extends GenericModel {
 
   double weightInUnits(WeightUnit unit) => unit.convertFromLbs(weightInPounds);
 
+  String _note = "";
+
+  String get note => _note;
+
+  set note(String? value) {
+    _note = (value ?? "").trimRight();
+  }
+
   @override
   Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
         "unit": GenericModel.convertEnumToString(() => unit,
@@ -41,6 +49,7 @@ class WeightEntry extends GenericModel {
         "weight": Tuple2(() => weight, (val) => weight = val),
         "time": Tuple2(() => dateTime.microsecondsSinceEpoch,
             (val) => dateTime = DateTime.fromMicrosecondsSinceEpoch(val!)),
+        "note": Tuple2(() => note, (val) => note = val),
       };
 
   @override

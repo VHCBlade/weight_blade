@@ -5,7 +5,7 @@ import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/event/goal.dart';
 import 'package:weight_blade/event/weight.dart';
 import 'package:weight_blade/model/goal.dart';
-import 'package:weight_blade/ui/weight/entries.dart';
+import 'package:weight_blade/ui/weight/entries/list.dart';
 import 'package:weight_blade/ui/weight/goal.dart';
 import 'package:weight_blade/ui/weight/modal.dart';
 

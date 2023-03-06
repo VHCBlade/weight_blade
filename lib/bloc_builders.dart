@@ -4,6 +4,7 @@ import 'package:event_navigation/event_navigation.dart';
 import 'package:weight_blade/bloc/goal.dart';
 import 'package:weight_blade/bloc/navigation/navigation.dart';
 import 'package:weight_blade/bloc/reminder.dart';
+import 'package:weight_blade/bloc/settings/settings.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/repository/notifications/repo.dart';
 
@@ -25,4 +26,7 @@ final blocBuilders = [
       parentChannel: channel,
       databaseRepository: read.read<DatabaseRepository>(),
       notificationsRepository: read.read<NotificationRepository>())),
+  BlocBuilder<SettingsBloc>((read, channel) => SettingsBloc(
+      parentChannel: channel,
+      databaseRepository: read.read<DatabaseRepository>())),
 ];

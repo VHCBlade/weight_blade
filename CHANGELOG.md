@@ -1,3 +1,12 @@
+## 1.4.0 - March 6, 2023
+
+- Added Settings Screen
+  - Added Ability to change Settings
+  - Added Show Delete Confirmation with accompanying behavior - on by default
+  - Added Show Licenses
+  - Added Our Other Apps
+- Added Notes Feature
+
 ## 1.3.0 - February 27, 2023
 
 - Added New App Icon

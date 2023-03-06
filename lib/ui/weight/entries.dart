@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/event/weight.dart';
 import 'package:weight_blade/model/weight.dart';
+import 'package:weight_blade/ui/weight/delete.dart';
 import 'package:weight_blade/ui/weight/modal.dart';
 
 final dateFormatter = DateFormat("MMM dd, yyyy").add_jm();
@@ -116,8 +117,7 @@ class WeightEntryWidget extends StatelessWidget {
               ),
               Expanded(child: Container()),
               IconButton(
-                  onPressed: () => context.fireEvent(
-                      WeightEvent.deleteWeightEntry.event, entry),
+                  onPressed: () => deleteWeightEntry(context, entry),
                   icon: const Icon(Icons.delete)),
               ElevatedButton(
                   onPressed: () async {

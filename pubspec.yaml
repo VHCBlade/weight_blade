@@ -25,6 +25,9 @@ dependencies:
   event_navigation: ^0.6.2
   # event_navigation:
   #   path: ../event-navigation
+  # event_ads: ^0.1.0
+  event_ads:
+    path: ../event_ads
 
   vhcblade_theme: ^0.2.0
   # vhcblade_theme:
@@ -33,6 +36,7 @@ dependencies:
   flutter_markdown: ^0.6.13
   flutter_native_timezone: ^2.0.0
   flutter_local_notifications: ^13.0.0
+  google_mobile_ads: ^2.3.0
   
   intl: ^0.18.0
   math_parser: ^1.5.0

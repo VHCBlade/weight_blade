@@ -1,3 +1,7 @@
+## 1.5.0 - March , 2023
+
+- Added Automatic Conversion when converting setting - on by default
+
 ## 1.4.0 - March 6, 2023
 
 - Added Settings Screen

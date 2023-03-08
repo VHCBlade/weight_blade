@@ -55,6 +55,9 @@ class WBSettingsAdDecorator with WBSettings {
   @override
   bool get showDeleteConfirmation => settings.showDeleteConfirmation;
 
+  @override
+  bool get automaticallyConvertUnits => settings.automaticallyConvertUnits;
+
   WBSettingsAdDecorator(this.settings);
 
   @override
@@ -67,4 +70,7 @@ class WBSettingsAdDecorator with WBSettings {
   @override
   set showDeleteConfirmation(bool showDeleteConfirmation) =>
       settings.showDeleteConfirmation = showDeleteConfirmation;
+  @override
+  set automaticallyConvertUnits(bool automaticallyConvertUnits) =>
+      settings.automaticallyConvertUnits = automaticallyConvertUnits;
 }

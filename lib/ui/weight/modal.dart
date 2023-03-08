@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_blade/bloc/settings/extension.dart';
 import 'package:weight_blade/model/goal.dart';
 import 'package:weight_blade/model/weight.dart';
 
@@ -65,9 +66,20 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
             const SizedBox(width: 10),
             ElevatedButton(
                 onPressed: () {
-                  currentEntry.unit = currentEntry.unit == WeightUnit.lbs
+                  final unit = currentEntry.unit == WeightUnit.lbs
                       ? WeightUnit.kg
                       : WeightUnit.lbs;
+                  final currentWeight = double.tryParse(controller.text);
+
+                  if (currentWeight != null &&
+                      context.readSettings.automaticallyConvertUnits) {
+                    final weight = unit.convertFromLbs(
+                        currentEntry.unit.convertToLbs(currentWeight));
+                    final roundedWeight = (weight * 10).round() / 10;
+
+                    controller.text = "$roundedWeight";
+                  }
+                  currentEntry.unit = unit;
                   setState(() {});
                 },
                 child: Text(currentEntry.unit.name))

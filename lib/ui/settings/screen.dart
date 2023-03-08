@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
+import 'package:weight_blade/ui/settings/convert.dart';
 import 'package:weight_blade/ui/settings/delete.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -47,6 +48,7 @@ class SettingsPage extends StatelessWidget {
           ]),
           const ListTile(title: Text("Change Settings"), selected: true),
           const DeleteConfirmationSettings(),
+          const AutomaticallyConverUnitsSetting(),
           ListTile(
               title: const Text("Change Theme"),
               onTap: () => context.fireEvent(

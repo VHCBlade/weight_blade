@@ -679,11 +679,10 @@ packages:
   vhcblade_theme:
     dependency: "direct main"
     description:
-      name: vhcblade_theme
-      sha256: a542512ac8d325bbde47431c84d4ee382aa8d53c1b3fd6f66c03307feb24edf6
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
+      path: "../vhcblade_theme"
+      relative: true
+    source: path
+    version: "0.2.3"
   visibility_detector:
     dependency: transitive
     description:

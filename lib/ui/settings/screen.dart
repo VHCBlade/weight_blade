@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:event_ads/event_ads.dart';
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:event_navigation/event_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
+import 'package:weight_blade/bloc/settings/extension.dart';
 import 'package:weight_blade/ui/settings/convert.dart';
 import 'package:weight_blade/ui/settings/delete.dart';
 
@@ -15,11 +19,57 @@ class SettingsScreen extends StatelessWidget {
     return FadeThroughWidgetSwitcher(builder: (_) {
       final bloc = context.watchBloc<MainNavigationBloc<String>>();
       if (bloc.deepNavigationMap["settings"] != null) {
+        final settings = context.watchSettings;
         switch (bloc.deepNavigationMap["settings"]!.leaf.value) {
           case 'theme':
             return VHCBladeThemePicker(
-                navigateBack: () => context.fireEvent(
-                    NavigationEvent.popDeepNavigation.event, null));
+              navigateBack: () => context.fireEvent(
+                  NavigationEvent.popDeepNavigation.event, null),
+              enableAdUnlock: settings.enableAdsAppWide,
+              unlockConfirmation: (_, context) async {
+                final completer = Completer<bool>();
+                context.fireEvent<RewardedAdCallback>(
+                    AdEvent.showRewardedAdWithCallback.event, (result) async {
+                  switch (result) {
+                    case RewardResult.dismissed:
+                      await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: const Text(
+                                    "You need to watch the full ad to get the reward!"),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text("Understood"))
+                                ],
+                              ));
+                      completer.complete(false);
+                      break;
+
+                    case RewardResult.noLoad:
+                      await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: const Text(
+                                    "We were unable to load an ad. Have this one on us!"),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text("Thanks"))
+                                ],
+                              ));
+                      completer.complete(false);
+                      break;
+                    case RewardResult.earned:
+                    default:
+                      completer.complete(true);
+                  }
+                });
+                return await completer.future;
+              },
+            );
           default:
         }
       }

@@ -30,8 +30,10 @@ final blocBuilders = [
   BlocBuilder<SettingsBloc>((read, channel) => SettingsBloc(
       parentChannel: channel,
       databaseRepository: read.read<DatabaseRepository>())),
-  BlocBuilder<AdBloc>((read, channel) => AdBloc(
-      parentChannel: channel,
-      repository: read.read<DatabaseRepository>(),
-      settingsGetter: () => read.read<SettingsBloc>().settings)),
+  BlocBuilder<AdBloc>(
+    (read, channel) => AdBloc(
+        parentChannel: channel,
+        repository: read.read<DatabaseRepository>(),
+        settingsGetter: () => read.read<SettingsBloc>().settings),
+  ),
 ];

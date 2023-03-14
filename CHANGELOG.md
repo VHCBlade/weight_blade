@@ -1,6 +1,10 @@
 ## 1.5.0 - March , 2023
 
 - Added Automatic Conversion when converting setting - on by default
+- Added Ad Support
+  - Interstitial Ad for saving weight every N times
+  - Rewarded Ad for unlocking themes
+  - Settings to control these
 
 ## 1.4.0 - March 6, 2023
 

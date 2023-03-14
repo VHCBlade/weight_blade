@@ -45,7 +45,6 @@ class AdBloc extends Bloc {
         return;
       }
       adModel.weightCount = adModel.weightCount + 1;
-      print(adModel.weightCount);
 
       if (adModel.weightCount % settings.showAdEveryNEntries == 0) {
         // eventChannel.fireEvent(AdEvent.showAd.event, null);

@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
 import 'package:weight_blade/bloc/settings/extension.dart';
+import 'package:weight_blade/ui/settings/ad.dart';
 import 'package:weight_blade/ui/settings/convert.dart';
 import 'package:weight_blade/ui/settings/delete.dart';
 
@@ -79,13 +80,14 @@ class SettingsPage extends StatelessWidget {
                     Uri.parse("https://github.com/VHCBlade/weight_blade"),
                     mode: LaunchMode.externalApplication,
                   )),
-          // if(!kIsWeb)
-          // ListTile(
-          //     title: const Text("Ad Settings"),
-          //     onTap: () => showDialog(
-          //           Uri.parse("https://github.com/VHCBlade/weight_blade"),
-          //           mode: LaunchMode.externalApplication,
-          //         )),
+          if (!kIsWeb)
+            ListTile(
+              title: const Text("Ad Settings"),
+              onTap: () => showDialog(
+                context: context,
+                builder: (_) => const AdSettingsWidget(),
+              ),
+            ),
         ],
       ),
     );

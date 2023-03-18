@@ -27,7 +27,7 @@ class WBSettingsModel extends GenericModel with WBSettings {
   bool enableAdsAppWide = true;
 
   @override
-  int showAdEveryNEntries = 20;
+  int showAdEveryNEntries = 10;
 
   @override
   bool showDeleteConfirmation = true;

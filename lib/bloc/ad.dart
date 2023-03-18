@@ -47,9 +47,7 @@ class AdBloc extends Bloc {
       adModel.weightCount = adModel.weightCount + 1;
 
       if (adModel.weightCount % settings.showAdEveryNEntries == 0) {
-        // eventChannel.fireEvent(AdEvent.showAd.event, null);
-        eventChannel.fireEvent(AdEvent.showRewardedAdWithCallback.event,
-            (reward) => print(reward));
+        eventChannel.fireEvent(AdEvent.showAd.event, null);
       }
       repository.saveModel(weightDb, adModel);
     });

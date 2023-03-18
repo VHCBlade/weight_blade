@@ -36,7 +36,15 @@ class ReminderBloc extends Bloc {
         await databaseRepository.findModel<Reminder>(weightDb, _reminderId);
     reminder ??= Reminder();
     loading = false;
+    resetReminderRepository();
     updateBloc();
+  }
+
+  Future<void> resetReminderRepository() async {
+    if (reminder!.enabled) {
+      await notificationsRepository.enableNotifications();
+      await notificationsRepository.setReminder(reminder);
+    }
   }
 
   Future<void> updateReminder(Reminder reminder) async {
@@ -48,10 +56,7 @@ class ReminderBloc extends Bloc {
     updateBloc();
 
     await databaseRepository.saveModel<Reminder>(weightDb, reminder);
-    if (reminder.enabled) {
-      await notificationsRepository.enableNotifications();
-      await notificationsRepository.setReminder(reminder);
-    }
+    await resetReminderRepository();
     updateBloc();
   }
 

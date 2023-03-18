@@ -148,9 +148,10 @@ packages:
   event_ads:
     dependency: "direct main"
     description:
-      path: "../event_ads"
-      relative: true
-    source: path
+      name: event_ads
+      sha256: "0055d6a01fd78454b50d0464af217de3f2581427843ec30869ad6b46501424d0"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0"
   event_bloc:
     dependency: "direct main"
@@ -679,9 +680,10 @@ packages:
   vhcblade_theme:
     dependency: "direct main"
     description:
-      path: "../vhcblade_theme"
-      relative: true
-    source: path
+      name: vhcblade_theme
+      sha256: b8d0425cfc677a8ce20718cf595d7c99bb59dc6e03451b97d10e41deb00c89fb
+      url: "https://pub.dev"
+    source: hosted
     version: "0.2.3"
   visibility_detector:
     dependency: transitive

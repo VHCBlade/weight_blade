@@ -15,4 +15,5 @@ final typeAdapters = <GenericTypeAdapter>[
   GenericTypeAdapter<SelectedTheme>(() => SelectedTheme(), (_) => 5),
   GenericTypeAdapter<WBSettingsModel>(() => WBSettingsModel(), (_) => 6),
   GenericTypeAdapter<AdModel>(() => AdModel(), (_) => 7),
+  GenericTypeAdapter<UnlockedThemes>(() => UnlockedThemes(), (_) => 8),
 ];

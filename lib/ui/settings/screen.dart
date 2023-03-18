@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:event_ads/event_ads.dart';
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:event_navigation/event_navigation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vhcblade_theme/vhcblade_picker.dart';
@@ -26,48 +25,9 @@ class SettingsScreen extends StatelessWidget {
               navigateBack: () => context.fireEvent(
                   NavigationEvent.popDeepNavigation.event, null),
               enableAdUnlock: settings.enableAdsAppWide,
-              unlockConfirmation: (_, context) async {
-                final completer = Completer<bool>();
-                context.fireEvent<RewardedAdCallback>(
-                    AdEvent.showRewardedAdWithCallback.event, (result) async {
-                  switch (result) {
-                    case RewardResult.dismissed:
-                      await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: const Text(
-                                    "You need to watch the full ad to get the reward!"),
-                                actions: [
-                                  ElevatedButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text("Understood"))
-                                ],
-                              ));
-                      completer.complete(false);
-                      break;
-
-                    case RewardResult.noLoad:
-                      await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: const Text(
-                                    "We were unable to load an ad. Have this one on us!"),
-                                actions: [
-                                  ElevatedButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text("Thanks"))
-                                ],
-                              ));
-                      completer.complete(false);
-                      break;
-                    case RewardResult.earned:
-                    default:
-                      completer.complete(true);
-                  }
-                });
-                return await completer.future;
+              unlockConfirmation: (_, context) {
+                context.fireEvent(AdEvent.showAd.event, null);
+                return true;
               },
             );
           default:
@@ -113,6 +73,19 @@ class SettingsPage extends StatelessWidget {
                     Uri.parse("https://vhcblade.com/#/apps"),
                     mode: LaunchMode.externalApplication,
                   )),
+          ListTile(
+              title: const Text("Source Code"),
+              onTap: () => launchUrl(
+                    Uri.parse("https://github.com/VHCBlade/weight_blade"),
+                    mode: LaunchMode.externalApplication,
+                  )),
+          // if(!kIsWeb)
+          // ListTile(
+          //     title: const Text("Ad Settings"),
+          //     onTap: () => showDialog(
+          //           Uri.parse("https://github.com/VHCBlade/weight_blade"),
+          //           mode: LaunchMode.externalApplication,
+          //         )),
         ],
       ),
     );

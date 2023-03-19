@@ -1,6 +1,6 @@
 ## 1.6.0 - Match , 2023
 
-- Added Graphs
+- Added Graph Screen
 
 ## 1.5.1 - March 19, 2023
 

@@ -44,3 +44,4 @@ app.*.map.json
 /android/app/release
 
 server-sync*.sh
+test*.sh

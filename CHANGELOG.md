@@ -1,4 +1,13 @@
-## 1.5.0 - March 19, 2023
+## 1.6.0 - Match , 2023
+
+- Added Graphs
+
+## 1.5.1 - March 19, 2023
+
+- Just a Test Upload. No Changes
+- Just a Test Upload. No Changes
+
+## 1.5.0 - March 18, 2023
 
 - Added Automatic Conversion when converting setting - on by default
 - Added Ad Support

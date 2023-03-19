@@ -5,6 +5,7 @@ import 'package:weight_blade/bloc/navigation/settings.dart';
 const possibleNavigations = <String>{
   "weigh",
   "reminder",
+  "graph",
   "import",
   "settings",
   "error",

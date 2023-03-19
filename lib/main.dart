@@ -82,13 +82,14 @@ class _MainScreenState extends State<MainScreen> {
 
     final navigationBar = MainNavigationBar(
       currentNavigation: navBloc.currentMainNavigation,
-      navigationPossibilities: const ["weigh", "reminder", "settings"],
+      navigationPossibilities: const ["weigh", "graph", "reminder", "settings"],
       builder: (index, onTap) => BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: index,
         onTap: onTap,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Graph'),
           BottomNavigationBarItem(
               icon: Icon(Icons.push_pin), label: 'Reminder'),
           BottomNavigationBarItem(

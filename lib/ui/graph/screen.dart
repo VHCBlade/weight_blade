@@ -64,12 +64,40 @@ class _GraphScreenState extends State<GraphScreen> {
                     .roundToDouble(),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
+                    drawBehindEverything: false,
                     sideTitles: SideTitles(
                       reservedSize: 60,
+                      getTitlesWidget: (value, meta) => ColoredBox(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: SideTitleWidget(
+                          axisSide: meta.axisSide,
+                          child: Text(meta.formattedValue,
+                              style: TextStyle(
+                                  backgroundColor: Theme.of(context)
+                                      .scaffoldBackgroundColor)),
+                        ),
+                      ),
                       showTitles: true,
                     ),
                   ),
-                  bottomTitles: AxisTitles(),
+                  bottomTitles: AxisTitles(
+                    drawBehindEverything: false,
+                    sideTitles: SideTitles(
+                      reservedSize: 60,
+                      getTitlesWidget: (value, meta) => ColoredBox(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        child: SideTitleWidget(
+                          axisSide: meta.axisSide,
+                          child: Text(
+                              "${DateTime.fromMicrosecondsSinceEpoch(value.toInt()).day == 1 ? "" : DateTime.fromMicrosecondsSinceEpoch(value.toInt()).day}",
+                              style: TextStyle(
+                                  backgroundColor: Theme.of(context)
+                                      .scaffoldBackgroundColor)),
+                        ),
+                      ),
+                      showTitles: true,
+                    ),
+                  ),
                   rightTitles: AxisTitles(),
                   topTitles: AxisTitles(),
                 ),

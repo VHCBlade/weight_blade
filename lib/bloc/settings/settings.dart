@@ -1,17 +1,18 @@
 import 'package:event_bloc/event_bloc.dart';
 import 'package:event_db/event_db.dart';
+import 'package:flutter/foundation.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/event/settings.dart';
 import 'package:weight_blade/model/settings.dart';
 
-const showAdsAtAll = true;
+const showAdsAtAll = kIsWeb ? false : true;
 const settingsKey = "WBSettings";
 
 class SettingsBloc extends Bloc {
   final DatabaseRepository databaseRepository;
 
-  WBSettings get settings => WBSettingsAdDecorator(settingsModel);
-  WBSettingsModel settingsModel = WBSettingsModel()..id = settingsKey;
+  WBSettings get settings => WBSettingsAdDecorator(internalSettingsModel);
+  WBSettingsModel internalSettingsModel = WBSettingsModel()..id = settingsKey;
 
   SettingsBloc(
       {required super.parentChannel, required this.databaseRepository}) {
@@ -29,14 +30,15 @@ class SettingsBloc extends Bloc {
       return;
     }
 
-    settingsModel = loadedSettings;
+    internalSettingsModel = loadedSettings;
     updateBloc();
   }
 
   void saveSettings(WBSettings settings) async {
-    settingsModel.copySettings(settings.unwrap);
+    internalSettingsModel.copySettings(settings.unwrap);
     updateBloc();
-    databaseRepository.saveModel<WBSettingsModel>(weightDb, settingsModel);
+    databaseRepository.saveModel<WBSettingsModel>(
+        weightDb, internalSettingsModel);
   }
 }
 

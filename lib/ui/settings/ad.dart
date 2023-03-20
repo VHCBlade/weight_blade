@@ -1,7 +1,6 @@
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:weight_blade/bloc/settings/settings.dart';
 import 'package:weight_blade/event/settings.dart';
 import 'package:weight_blade/model/settings.dart';

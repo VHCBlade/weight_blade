@@ -1,15 +1,16 @@
 import 'package:event_ads/event_ads.dart';
 import 'package:event_bloc/event_bloc_widgets.dart';
+import 'package:event_essay/event_essay.dart';
 import 'package:event_navigation/event_navigation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
 import 'package:weight_blade/bloc/settings/extension.dart';
 import 'package:weight_blade/ui/settings/ad.dart';
 import 'package:weight_blade/ui/settings/convert.dart';
 import 'package:weight_blade/ui/settings/delete.dart';
+import 'package:weight_blade/ui/settings/privacy.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -31,6 +32,8 @@ class SettingsScreen extends StatelessWidget {
                 return true;
               },
             );
+          case 'privacy':
+            return const PrivacyScreen();
           default:
         }
       }
@@ -70,16 +73,20 @@ class SettingsPage extends StatelessWidget {
               onTap: () => showLicensePage(context: context)),
           ListTile(
               title: const Text("Our Other Apps"),
-              onTap: () => launchUrl(
-                    Uri.parse("https://vhcblade.com/#/apps"),
-                    mode: LaunchMode.externalApplication,
-                  )),
+              onTap: () => context.fireEvent(
+                  EssayEvent.url.event, "https://vhcblade.com/#/apps")),
           ListTile(
               title: const Text("Source Code"),
-              onTap: () => launchUrl(
-                    Uri.parse("https://github.com/VHCBlade/weight_blade"),
-                    mode: LaunchMode.externalApplication,
-                  )),
+              onTap: () => context.fireEvent(EssayEvent.url.event,
+                  "https://github.com/VHCBlade/weight_blade")),
+          ListTile(
+              title: const Text("Send Us Your Feedback"),
+              onTap: () => context.fireEvent(
+                  EssayEvent.url.event, "mailto:weight@vhcblade.com")),
+          ListTile(
+              title: const Text("Privacy Policy"),
+              onTap: () => context.fireEvent(
+                  NavigationEvent.pushDeepNavigation.event, "privacy")),
           if (!kIsWeb)
             ListTile(
               title: const Text("Ad Settings"),

@@ -15,6 +15,7 @@ dependencies:
   carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.2
 
+  event_essay: ^0.1.0
   event_bloc: ^4.2.0
   event_db: ^0.1.0
   # event_db:
@@ -60,6 +61,7 @@ flutter:
   uses-material-design: true
   assets:
     - icons/180x180.png
+    - assets/text/privacy.md
     - CHANGELOG.md
 
 flutter_icons:

@@ -1,7 +1,8 @@
 ## 1.6.1 - March 20, 2023
 
 - Fixed Issue with ads being enabled on Web.
-- Added Day Counter to the bottom of the graph
+- Added Day Counter to the bottom of the graph.
+- Added No Weight Entries Yet state for Graph Screen.
 - Gave background to weight dibits in graph, to not be overlapped with overflowing lines.
 
 ## 1.6.0 - March 20, 2023

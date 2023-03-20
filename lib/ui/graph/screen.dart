@@ -43,117 +43,123 @@ class _GraphScreenState extends State<GraphScreen> {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          Expanded(
-            child: LineChart(
-              LineChartData(
-                minX: DateTime(dateTime.year, dateTime.month)
-                    .microsecondsSinceEpoch
-                    .toDouble(),
-                maxX: DateTime(dateTime.year, dateTime.month + 1)
-                    .microsecondsSinceEpoch
-                    .toDouble(),
-                minY: (bloc.weightEntryMap.values
-                            .map((e) => e.weightInUnits(weightUnit))
-                            .reduce((a, b) => a < b ? a : b) -
-                        1)
-                    .roundToDouble(),
-                maxY: (bloc.weightEntryMap.values
-                            .map((e) => e.weightInUnits(weightUnit))
-                            .reduce((a, b) => a > b ? a : b) +
-                        2)
-                    .roundToDouble(),
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    drawBehindEverything: false,
-                    sideTitles: SideTitles(
-                      reservedSize: 60,
-                      getTitlesWidget: (value, meta) => ColoredBox(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        child: SideTitleWidget(
-                          axisSide: meta.axisSide,
-                          child: Text(meta.formattedValue,
-                              style: TextStyle(
-                                  backgroundColor: Theme.of(context)
-                                      .scaffoldBackgroundColor)),
+          if (bloc.loadedEntries.isEmpty)
+            Expanded(
+                child: Text("No Weight Entries Yet! Add One First!",
+                    style: Theme.of(context).textTheme.displaySmall)),
+          if (bloc.loadedEntries.isNotEmpty)
+            Expanded(
+              child: LineChart(
+                LineChartData(
+                  minX: DateTime(dateTime.year, dateTime.month)
+                      .microsecondsSinceEpoch
+                      .toDouble(),
+                  maxX: DateTime(dateTime.year, dateTime.month + 1)
+                      .microsecondsSinceEpoch
+                      .toDouble(),
+                  minY: (bloc.weightEntryMap.values
+                              .map((e) => e.weightInUnits(weightUnit))
+                              .reduce((a, b) => a < b ? a : b) -
+                          1)
+                      .roundToDouble(),
+                  maxY: (bloc.weightEntryMap.values
+                              .map((e) => e.weightInUnits(weightUnit))
+                              .reduce((a, b) => a > b ? a : b) +
+                          2)
+                      .roundToDouble(),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      drawBehindEverything: false,
+                      sideTitles: SideTitles(
+                        reservedSize: 60,
+                        getTitlesWidget: (value, meta) => ColoredBox(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            child: Text(meta.formattedValue,
+                                style: TextStyle(
+                                    backgroundColor: Theme.of(context)
+                                        .scaffoldBackgroundColor)),
+                          ),
                         ),
+                        showTitles: true,
                       ),
-                      showTitles: true,
                     ),
-                  ),
-                  bottomTitles: AxisTitles(
-                    drawBehindEverything: false,
-                    sideTitles: SideTitles(
-                      reservedSize: 60,
-                      getTitlesWidget: (value, meta) => ColoredBox(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        child: SideTitleWidget(
-                          axisSide: meta.axisSide,
-                          child: Text(
-                              "${DateTime.fromMicrosecondsSinceEpoch(value.toInt()).day == 1 ? "" : DateTime.fromMicrosecondsSinceEpoch(value.toInt()).day}",
-                              style: TextStyle(
-                                  backgroundColor: Theme.of(context)
-                                      .scaffoldBackgroundColor)),
+                    bottomTitles: AxisTitles(
+                      drawBehindEverything: false,
+                      sideTitles: SideTitles(
+                        reservedSize: 60,
+                        getTitlesWidget: (value, meta) => ColoredBox(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            child: Text(
+                                "${DateTime.fromMicrosecondsSinceEpoch(value.toInt()).day == 1 ? "" : DateTime.fromMicrosecondsSinceEpoch(value.toInt()).day}",
+                                style: TextStyle(
+                                    backgroundColor: Theme.of(context)
+                                        .scaffoldBackgroundColor)),
+                          ),
                         ),
+                        showTitles: true,
                       ),
-                      showTitles: true,
                     ),
+                    rightTitles: AxisTitles(),
+                    topTitles: AxisTitles(),
                   ),
-                  rightTitles: AxisTitles(),
-                  topTitles: AxisTitles(),
-                ),
-                gridData: FlGridData(
-                  show: true,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
+                  gridData: FlGridData(
+                    show: true,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: Colors.grey,
+                        strokeWidth: 0.5,
+                      );
+                    },
+                    drawVerticalLine: false,
+                  ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(
                       color: Colors.grey,
-                      strokeWidth: 0.5,
-                    );
-                  },
-                  drawVerticalLine: false,
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 0.5,
-                  ),
-                ),
-                lineTouchData: LineTouchData(
-                    touchTooltipData: LineTouchTooltipData(
-                        getTooltipItems: (list) => list.map((val) {
-                              final weightEntry = bloc.weightEntryMap.values
-                                  .firstWhere((element) =>
-                                      element.dateTime.microsecondsSinceEpoch ==
-                                      val.x);
-                              final tooltip =
-                                  "${(val.y * 10).round() / 10} ${weightUnit.name}\n"
-                                  "${tooltipDateFormat.format(weightEntry.dateTime)}";
-                              return LineTooltipItem(
-                                  weightEntry.note.isEmpty
-                                      ? tooltip
-                                      : "$tooltip\n${weightEntry.note}",
-                                  const TextStyle());
-                            }).toList())),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: getSpots(bloc),
-                    color: Theme.of(context).primaryColor,
-                    isCurved: false,
-                    barWidth: 2,
-                    dotData: FlDotData(
-                      show: true,
-                      getDotPainter: (spot, percent, barData, index) =>
-                          FlDotCirclePainter(
-                        color: Theme.of(context).primaryColor,
-                        radius: 5,
-                        strokeWidth: 0,
-                      ),
+                      width: 0.5,
                     ),
                   ),
-                ],
+                  lineTouchData: LineTouchData(
+                      touchTooltipData: LineTouchTooltipData(
+                          getTooltipItems: (list) => list.map((val) {
+                                final weightEntry = bloc.weightEntryMap.values
+                                    .firstWhere((element) =>
+                                        element
+                                            .dateTime.microsecondsSinceEpoch ==
+                                        val.x);
+                                final tooltip =
+                                    "${(val.y * 10).round() / 10} ${weightUnit.name}\n"
+                                    "${tooltipDateFormat.format(weightEntry.dateTime)}";
+                                return LineTooltipItem(
+                                    weightEntry.note.isEmpty
+                                        ? tooltip
+                                        : "$tooltip\n${weightEntry.note}",
+                                    const TextStyle());
+                              }).toList())),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: getSpots(bloc),
+                      color: Theme.of(context).primaryColor,
+                      isCurved: false,
+                      barWidth: 2,
+                      dotData: FlDotData(
+                        show: true,
+                        getDotPainter: (spot, percent, barData, index) =>
+                            FlDotCirclePainter(
+                          color: Theme.of(context).primaryColor,
+                          radius: 5,
+                          strokeWidth: 0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
           Row(
             children: [
               const SizedBox(width: 20),

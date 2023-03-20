@@ -51,6 +51,7 @@ class _GraphScreenState extends State<GraphScreen> {
             Expanded(
               child: LineChart(
                 LineChartData(
+                  clipData: FlClipData.all(),
                   minX: DateTime(dateTime.year, dateTime.month)
                       .microsecondsSinceEpoch
                       .toDouble(),

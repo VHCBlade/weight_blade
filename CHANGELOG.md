@@ -4,6 +4,7 @@
 - Added Day Counter to the bottom of the graph.
 - Added No Weight Entries Yet state for Graph Screen.
 - Gave background to weight dibits in graph, to not be overlapped with overflowing lines.
+- Added Clip for Line Graph so it doesn't overflow into other widgets
 - Added Privacy Policy
 
 ## 1.6.0 - March 20, 2023

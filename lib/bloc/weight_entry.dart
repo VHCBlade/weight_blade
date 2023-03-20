@@ -109,9 +109,12 @@ class WeightEntryBloc extends Bloc {
     updateBloc();
   }
 
+  int decrement = 6;
+
   void addWeightEntry(WeightEntry entry) async {
     entry.id = const Uuid().v4();
     entry.dateTime = DateTime.now();
+    decrement--;
 
     loadedEntries.insert(0, entry.id!);
     weightEntryMap[entry.id!] = entry;

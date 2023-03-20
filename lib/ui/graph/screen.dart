@@ -154,7 +154,6 @@ class _GraphScreenState extends State<GraphScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
           Row(
             children: [
               const SizedBox(width: 20),

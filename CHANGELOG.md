@@ -1,3 +1,9 @@
+## 1.6.2 - March 24, 2023
+
+- Added Background to Month Picker for Graph Screen
+- Fixed Bug that caused long weight entry lists to not load correctly while scrolling down
+- Added Support for long term weights across multiple months
+
 ## 1.6.1 - March 20, 2023
 
 - Fixed Issue with ads being enabled on Web.

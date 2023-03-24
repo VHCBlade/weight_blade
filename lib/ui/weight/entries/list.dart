@@ -79,7 +79,7 @@ class _WeightEntryListState extends State<WeightEntryList> {
         itemBuilder: (_, i, animation) => SizeTransition(
               sizeFactor: animation,
               axisAlignment: 1.0,
-              child: i == weightBloc.loadedEntries.length
+              child: i >= weightBloc.loadedEntries.length
                   ? const SizedBox(height: 80)
                   : WeightEntryWidget(entry: weightBloc.entryAt(i)!),
             ),

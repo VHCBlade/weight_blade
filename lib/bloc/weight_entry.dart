@@ -43,6 +43,9 @@ class WeightEntryBloc extends Bloc {
         WeightEvent.updateWeightEntry.event, (p0, p1) => updateWeightEntry(p1));
     eventChannel.addEventListener<WeightEntry>(
         WeightEvent.deleteWeightEntry.event, (p0, p1) => deleteWeightEntry(p1));
+    eventChannel.addEventListener<DateTime>(
+        WeightEvent.ensureDateTimeIsShown.event,
+        (p0, p1) => ensureDateTimeIsShown(p1));
   }
 
   @override
@@ -85,10 +88,22 @@ class WeightEntryBloc extends Bloc {
     await repo.saveModel<Ledger>(weightDb, ledger);
   }
 
-  void loadWeightEntries(int entriesToLoad) async {
+  void ensureDateTimeIsShown(DateTime dateTime) async {
+    while (loadedEntries.isEmpty ||
+        dateTime.isBefore(weightEntryMap[loadedEntries.last]!.dateTime)) {
+      if (ledger == null || ledger!.entries.length <= loadedEntries.length) {
+        return;
+      }
+      await loadWeightEntries(10);
+    }
+  }
+
+  Future<void> loadWeightEntries(int entriesToLoad) async {
     if (ledger == null) {
       return;
     }
+    // print("Loading $entriesToLoad - "
+    //     "Current ${loadedEntries.length} - Potential ${ledger?.entries.length}");
     final loadedSet = loadedEntries.toSet();
     final entryKeys = ledger!.entries
         .where((element) => !loadedSet.contains(element))
@@ -100,6 +115,7 @@ class WeightEntryBloc extends Bloc {
 
     newLoadedEntries.where((element) => element != null).forEach((element) {
       loadedEntries.add(element!.id!);
+      _addedWeight.sink.add(loadedEntries.length - 1);
       weightEntryMap[element.id!] = element;
     });
 

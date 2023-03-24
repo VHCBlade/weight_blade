@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
+import 'package:weight_blade/event/weight.dart';
 import 'package:weight_blade/model/weight.dart';
+import 'package:weight_blade/ui/graph/month_picker.dart';
 
 final dateFormat = DateFormat.yMMMM();
 final tooltipDateFormat = DateFormat.MMMMd();
@@ -31,9 +33,21 @@ class _GraphScreenState extends State<GraphScreen> {
         : bloc.weightEntryMap[bloc.loadedEntries[0]]!.unit;
   }
 
+  void updateMonth(DateTime dateTime) {
+    context.fireEvent(WeightEvent.ensureDateTimeIsShown.event, dateTime);
+    setState(() => this.dateTime = dateTime);
+  }
+
+  bool withinTimeRange(WeightEntry entry) =>
+      dateTime.isAfter(entry.dateTime) &&
+      DateTime(dateTime.year, dateTime.month).isBefore(entry.dateTime);
+
   @override
   Widget build(BuildContext context) {
     final bloc = context.watchBloc<WeightEntryBloc>();
+    final includedEntries = bloc.weightEntryMap.values
+        .where(withinTimeRange)
+        .map((e) => e.weightInUnits(weightUnit));
 
     return Scaffold(
       appBar: AppBar(
@@ -58,15 +72,17 @@ class _GraphScreenState extends State<GraphScreen> {
                   maxX: DateTime(dateTime.year, dateTime.month + 1)
                       .microsecondsSinceEpoch
                       .toDouble(),
-                  minY: (bloc.weightEntryMap.values
-                              .map((e) => e.weightInUnits(weightUnit))
-                              .reduce((a, b) => a < b ? a : b) -
-                          1)
+                  minY: (includedEntries.isEmpty
+                          ? bloc.weightEntryMap[bloc.loadedEntries[0]]!
+                                  .weightInUnits(weightUnit) -
+                              1
+                          : includedEntries.reduce((a, b) => a < b ? a : b) - 1)
                       .roundToDouble(),
-                  maxY: (bloc.weightEntryMap.values
-                              .map((e) => e.weightInUnits(weightUnit))
-                              .reduce((a, b) => a > b ? a : b) +
-                          2)
+                  maxY: (includedEntries.isEmpty
+                          ? bloc.weightEntryMap[bloc.loadedEntries[0]]!
+                                  .weightInUnits(weightUnit) +
+                              2
+                          : includedEntries.reduce((a, b) => a > b ? a : b) + 2)
                       .roundToDouble(),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
@@ -178,17 +194,9 @@ class _GraphScreenState extends State<GraphScreen> {
                 child: ElevatedButton(
                   onPressed: () => showCupertinoModalPopup(
                     context: context,
-                    builder: (BuildContext context) => SizedBox(
-                      height: 250,
-                      child: CupertinoDatePicker(
-                        mode: CupertinoDatePickerMode.date,
-                        initialDateTime: dateTime,
-                        minimumYear: 1900,
-                        maximumYear: DateTime.now().year,
-                        onDateTimeChanged: (dateTime) {
-                          setState(() => this.dateTime = dateTime);
-                        },
-                      ),
+                    builder: (BuildContext context) => MonthPicker(
+                      initialDateTime: dateTime,
+                      onDateTimeChanged: updateMonth,
                     ),
                   ),
                   child: const Text("Change Month"),

@@ -47,8 +47,8 @@ class WeightEntry extends GenericModel {
         "unit": GenericModel.convertEnumToString(() => unit,
             (value) => unit = value ?? WeightUnit.lbs, WeightUnit.values),
         "weight": Tuple2(() => weight, (val) => weight = val),
-        "time": Tuple2(() => dateTime.microsecondsSinceEpoch,
-            (val) => dateTime = DateTime.fromMicrosecondsSinceEpoch(val!)),
+        "time": GenericModel.dateTime(
+            () => dateTime, (value) => dateTime = value ?? DateTime.now()),
         "note": Tuple2(() => note, (val) => note = val),
       };
 

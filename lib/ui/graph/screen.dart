@@ -25,7 +25,8 @@ class _GraphScreenState extends State<GraphScreen> {
   @override
   void initState() {
     super.initState();
-    dateTime = DateTime.now();
+    final now = DateTime.now();
+    dateTime = DateTime(now.year, now.month);
 
     final bloc = context.readBloc<WeightEntryBloc>();
     weightUnit = bloc.loadedEntries.isEmpty
@@ -35,12 +36,12 @@ class _GraphScreenState extends State<GraphScreen> {
 
   void updateMonth(DateTime dateTime) {
     context.fireEvent(WeightEvent.ensureDateTimeIsShown.event, dateTime);
-    setState(() => this.dateTime = dateTime);
+    setState(() => this.dateTime = DateTime(dateTime.year, dateTime.month));
   }
 
   bool withinTimeRange(WeightEntry entry) =>
-      dateTime.isAfter(entry.dateTime) &&
-      DateTime(dateTime.year, dateTime.month).isBefore(entry.dateTime);
+      dateTime.isBefore(entry.dateTime) &&
+      DateTime(dateTime.year, dateTime.month + 1).isAfter(entry.dateTime);
 
   @override
   Widget build(BuildContext context) {

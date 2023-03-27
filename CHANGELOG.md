@@ -2,12 +2,13 @@
 
 - Fixed bug that caused reminders to not display on the correct weekday.
 - Added option to set date when creating a new Weight entry.
+- Fixed Graph issue causing graph limits to not always show all of the graph points within the Weight Range.
 
 ## 1.6.2 - March 24, 2023
 
 - Added Background to Month Picker for Graph Screen
 - Fixed Bug that caused long weight entry lists to not load correctly while scrolling down
-- Added Support for long term weights across multiple months
+- Added Graph Support for long term weights across multiple months
 
 ## 1.6.1 - March 20, 2023
 

@@ -88,7 +88,7 @@ class WeightEntryBloc extends Bloc {
     await repo.saveModel<Ledger>(weightDb, ledger);
   }
 
-  void ensureDateTimeIsShown(DateTime dateTime) async {
+  Future<void> ensureDateTimeIsShown(DateTime dateTime) async {
     while (loadedEntries.isEmpty ||
         dateTime.isBefore(weightEntryMap[loadedEntries.last]!.dateTime)) {
       if (ledger == null || ledger!.entries.length <= loadedEntries.length) {
@@ -129,7 +129,6 @@ class WeightEntryBloc extends Bloc {
 
   void addWeightEntry(WeightEntry entry) async {
     entry.id = const Uuid().v4();
-    entry.dateTime = DateTime.now();
     decrement--;
 
     loadedEntries.insert(0, entry.id!);
@@ -139,17 +138,59 @@ class WeightEntryBloc extends Bloc {
       ..id = ledgerKey;
 
     ledger!.entries.insert(0, entry.id!);
+    await ensureCorrectOrder(entry);
 
     await repo.saveModel<WeightEntry>(weightDb, entry);
-    _addedWeight.sink.add(0);
+    _addedWeight.sink.add(loadedEntries.indexOf(entry.id!));
     await repo.saveModel<Ledger>(weightDb, ledger!);
 
     updateBloc();
   }
 
+  /// returns true if the [entry] was already in the correct place. false if the list had to be sorted first.
+  Future<bool> ensureCorrectOrder(WeightEntry entry) async {
+    if (entryIsAtCorrectLocation(entry)) {
+      return true;
+    }
+
+    await ensureDateTimeIsShown(
+        entry.dateTime.subtract(const Duration(seconds: 1)));
+
+    loadedEntries.sort((a, b) =>
+        weightEntryMap[b]!.dateTime.compareTo(weightEntryMap[a]!.dateTime));
+    ledger!.entries = [
+      ...loadedEntries,
+      ...ledger!.entries.sublist(loadedEntries.length)
+    ];
+
+    return false;
+  }
+
+  bool entryIsAtCorrectLocation(WeightEntry entry) {
+    final location = loadedEntries.indexOf(entry.id!);
+
+    if (location > 0 &&
+        weightEntryMap[loadedEntries[location - 1]]!
+            .dateTime
+            .isBefore(entry.dateTime)) {
+      return false;
+    }
+
+    return location + 1 < loadedEntries.length &&
+        weightEntryMap[loadedEntries[location + 1]]!
+            .dateTime
+            .isBefore(entry.dateTime);
+  }
+
   void updateWeightEntry(WeightEntry entry) async {
     await repo.saveModel<WeightEntry>(weightDb, entry);
     weightEntryMap[entry.id!] = entry;
+    final initialLocation = loadedEntries.indexOf(entry.id!);
+    if (!await ensureCorrectOrder(entry)) {
+      await repo.saveModel<Ledger>(weightDb, ledger!);
+      _removedWeight.add(Tuple2(initialLocation, entry));
+      _addedWeight.add(loadedEntries.indexOf(entry.id!));
+    }
 
     updateBloc();
   }

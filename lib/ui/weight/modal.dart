@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:weight_blade/bloc/settings/extension.dart';
 import 'package:weight_blade/model/goal.dart';
 import 'package:weight_blade/model/weight.dart';
@@ -145,6 +146,57 @@ class _WeightGoalModalState extends State<WeightGoalModal> {
         goal.unit = entry.unit;
         goal.weight = entry.weight;
         return Navigator.of(context).pop(goal);
+      },
+      title: const Text("Set Goal"),
+    );
+  }
+}
+
+class WeightEntryWithDateModal extends StatefulWidget {
+  final WeightEntry? entry;
+  const WeightEntryWithDateModal({super.key, this.entry});
+
+  @override
+  State<WeightEntryWithDateModal> createState() => _WeightEntryWithDateModal();
+}
+
+class _WeightEntryWithDateModal extends State<WeightEntryWithDateModal> {
+  late DateTime dateTime;
+
+  @override
+  void initState() {
+    dateTime = widget.entry?.dateTime ?? DateTime.now();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WeightEntryModal(
+      entry: widget.entry,
+      extraContent: Padding(
+        padding: const EdgeInsets.only(top: 13),
+        child: Row(
+          children: [
+            const Text("Date"),
+            const Expanded(child: SizedBox()),
+            ElevatedButton(
+                onPressed: () async {
+                  final newDateTime = await showDatePicker(
+                      context: context,
+                      initialDate: dateTime,
+                      firstDate: DateTime(1970),
+                      lastDate: DateTime.now());
+
+                  dateTime = newDateTime ?? dateTime;
+                  setState(() {});
+                },
+                child: Text(DateFormat.yMMMMd().format(dateTime))),
+          ],
+        ),
+      ),
+      onSave: (entry) {
+        entry.dateTime = dateTime;
+        Navigator.of(context).pop(entry);
       },
       title: const Text("Set Goal"),
     );

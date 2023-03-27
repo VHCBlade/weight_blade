@@ -74,10 +74,11 @@ class _WeightScreenState extends State<WeightScreen> {
           final eventChannel = context.eventChannel;
           final entry = await showDialog(
               context: context,
-              builder: (_) => WeightEntryModal(
+              builder: (_) => WeightEntryWithDateModal(
                   entry: WeightEntry()
                     ..copy(weightBloc.latestEntry ?? WeightEntry())
-                    ..id = null));
+                    ..id = null
+                    ..dateTime = DateTime.now()));
 
           if (entry == null) {
             return;

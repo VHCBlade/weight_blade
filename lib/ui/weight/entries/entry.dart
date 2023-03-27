@@ -73,7 +73,7 @@ class WeightEntryHeader extends StatelessWidget {
               final eventChannel = context.eventChannel;
               final updatedEntry = await showDialog(
                   context: context,
-                  builder: (_) => WeightEntryModal(entry: entry));
+                  builder: (_) => WeightEntryWithDateModal(entry: entry));
 
               if (updatedEntry == null) {
                 return;

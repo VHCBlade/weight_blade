@@ -1,3 +1,8 @@
+## 1.6.3 - March 27, 2023
+
+- Fixed bug that caused reminders to not display on the correct weekday.
+- Added option to set date when creating a new Weight entry.
+
 ## 1.6.2 - March 24, 2023
 
 - Added Background to Month Picker for Graph Screen

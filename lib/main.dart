@@ -59,9 +59,22 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   late final _loading = GlobalKey(debugLabel: "Initial Loading");
   late final _main = GlobalKey(debugLabel: "Main Parent");
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        context.fireEvent<void>(ReminderEvent.loadReminder.event, null);
+        break;
+      case AppLifecycleState.detached:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();

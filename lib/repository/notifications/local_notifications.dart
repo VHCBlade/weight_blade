@@ -1,5 +1,4 @@
 import 'package:event_bloc/event_bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/timezone.dart';
@@ -54,14 +53,14 @@ class LocalNotificationRepository extends NotificationRepository {
       return false;
     }
 
-    for (final day in reminder.daysOfTheWeek) {
+    for (final day in {...reminder.daysOfTheWeek}) {
       DateTime currentDay = DateTime.now();
       currentDay.weekday;
       plugin.zonedSchedule(
         idFromReminder(reminder, day),
         "Weigh-in Reminder",
         "Time to weigh in!",
-        TZDateTime.from(getNextDayOfTheWeekAndTime(day, reminder.timeOfDay),
+        TZDateTime.from(day.getNextTime(reminder.timeOfDay),
             getLocation(await FlutterNativeTimezone.getLocalTimezone())),
         const NotificationDetails(
             android: AndroidNotificationDetails(
@@ -79,24 +78,5 @@ class LocalNotificationRepository extends NotificationRepository {
     }
 
     return true;
-  }
-
-  DateTime getNextDayOfTheWeekAndTime(
-      DayOfTheWeek dayOfTheWeek, TimeOfDay timeOfDay) {
-    final currentDay = DateTime.now();
-    final currentDaySetTime = currentDay.copyWith(
-      microsecond: 0,
-      millisecond: 0,
-      second: 0,
-      hour: timeOfDay.hour,
-      minute: timeOfDay.minute,
-    );
-
-    final candidateDay = currentDaySetTime
-        .add(Duration(days: currentDay.weekday - dayOfTheWeek.count % 7));
-
-    return candidateDay.isBefore(currentDay)
-        ? candidateDay.add(const Duration(days: 7))
-        : candidateDay;
   }
 }

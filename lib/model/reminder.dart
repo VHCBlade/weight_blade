@@ -7,6 +7,7 @@ class Reminder extends GenericModel {
   TimeOfDay timeOfDay = const TimeOfDay(hour: 7, minute: 0);
   Set<DayOfTheWeek> daysOfTheWeek = {DayOfTheWeek.sat, DayOfTheWeek.wed};
   bool enabled = false;
+  bool enabledAlarm = false;
 
   @override
   Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
@@ -21,6 +22,8 @@ class Reminder extends GenericModel {
                 .map<DayOfTheWeek>((e) => DayOfTheWeek.values.byName(e))
                 .toSet()),
         "enabled": Tuple2(() => enabled, (val) => enabled = val),
+        "enabledAlarm":
+            Tuple2(() => enabledAlarm, (val) => enabledAlarm = val ?? false),
       };
 
   @override

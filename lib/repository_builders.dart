@@ -12,8 +12,11 @@ import 'package:weight_blade/repository/url.dart';
 final pocRepositoryBuilders = [
   RepositoryBuilder<DatabaseRepository>(
       (read) => HiveRepository(typeAdapters: typeAdapters)),
-  RepositoryBuilder<NotificationRepository>((read) =>
-      kIsWeb ? FakeNotificationsRepository() : LocalNotificationRepository()),
+  RepositoryBuilder<NotificationRepository>((read) => kIsWeb
+      ? FakeNotificationsRepository()
+      // TODO: WB-20 This alarm option doesn't work. It always plays the alarm at the closest possible date.
+      // : AlarmNotificationRepository(LocalNotificationRepository())),
+      : LocalNotificationRepository()),
   RepositoryBuilder<TextRepository>((read) => DefaultTextRepository()),
   RepositoryBuilder<UrlRepository>((read) => UrlRepository()),
   RepositoryBuilder<AdRepository>((read) => AdRepository(

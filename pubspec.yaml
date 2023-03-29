@@ -2,7 +2,7 @@ name: weight_blade
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.6.3
+version: 1.6.3+2
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
@@ -30,6 +30,9 @@ dependencies:
   event_ads: ^0.1.0
   # event_ads:
   #   path: ../event_ads
+  # event_modals: ^0.1.0
+  event_modals:
+    path: ../vhcblade_modals
 
   vhcblade_theme: ^0.2.3
   # vhcblade_theme:

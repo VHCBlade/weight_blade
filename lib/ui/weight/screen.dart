@@ -1,4 +1,5 @@
 import 'package:event_bloc/event_bloc_widgets.dart';
+import 'package:event_modals/event_modals.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_blade/bloc/goal.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
@@ -46,21 +47,17 @@ class _WeightScreenState extends State<WeightScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              final eventChannel = context.eventChannel;
               final noCurrentGoal = goal == null;
-              final newGoal = await showDialog<WeightGoal>(
-                  context: context,
-                  builder: (_) => WeightGoalModal(goal: goal));
-
-              if (newGoal == null) {
-                return;
-              }
-
-              eventChannel.fireEvent<WeightGoal>(
-                  noCurrentGoal
-                      ? GoalEvent.addWeightGoal.event
-                      : GoalEvent.updateWeightGoal.event,
-                  newGoal);
+              await showEventDialog<WeightGoal>(
+                context: context,
+                builder: (_) => WeightGoalModal(goal: goal),
+                onResponse: (eventChannel, response) =>
+                    eventChannel.fireEvent<WeightGoal>(
+                        noCurrentGoal
+                            ? GoalEvent.addWeightGoal.event
+                            : GoalEvent.updateWeightGoal.event,
+                        response),
+              );
             },
             icon: goal == null ? const Icon(Icons.add) : const Icon(Icons.edit),
           )
@@ -70,23 +67,17 @@ class _WeightScreenState extends State<WeightScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add,
             color: Theme.of(context).textTheme.displayMedium?.color),
-        onPressed: () async {
-          final eventChannel = context.eventChannel;
-          final entry = await showDialog(
-              context: context,
-              builder: (_) => WeightEntryWithDateModal(
-                  entry: WeightEntry()
-                    ..copy(weightBloc.latestEntry ?? WeightEntry())
-                    ..id = null
-                    ..dateTime = DateTime.now()));
-
-          if (entry == null) {
-            return;
-          }
-
-          eventChannel.fireEvent<WeightEntry>(
-              WeightEvent.addWeightEntry.event, entry);
-        },
+        onPressed: () => showEventDialog(
+          context: context,
+          onResponse: (BlocEventChannel eventChannel, response) =>
+              eventChannel.fireEvent<WeightEntry>(
+                  WeightEvent.addWeightEntry.event, response),
+          builder: (_) => WeightEntryWithDateModal(
+              entry: WeightEntry()
+                ..copy(weightBloc.latestEntry ?? WeightEntry())
+                ..id = null
+                ..dateTime = DateTime.now()),
+        ),
       ),
     );
   }

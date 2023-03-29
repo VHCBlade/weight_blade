@@ -1,21 +1,15 @@
+import 'package:event_modals/event_modals.dart';
 import 'package:flutter/material.dart';
 
-import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:weight_blade/event/weight.dart';
 import 'package:weight_blade/model/weight.dart';
 
-void editWeightEntryNote(BuildContext context, WeightEntry entry) async {
-  final eventChannel = context.eventChannel;
-
-  final newNote = await showDialog<String>(
-      context: context, builder: (_) => NoteDialog(initialNote: entry.note));
-
-  if (newNote == null) {
-    return;
-  }
-
-  eventChannel.fireEvent(
-      WeightEvent.updateWeightEntry.event, entry..note = newNote);
+void editWeightEntryNote(BuildContext context, WeightEntry entry) {
+  showEventDialog<String>(
+      context: context,
+      builder: (_) => NoteDialog(initialNote: entry.note),
+      onResponse: (eventChannel, value) => eventChannel.fireEvent(
+          WeightEvent.updateWeightEntry.event, entry..note = value));
 }
 
 class NoteDialog extends StatefulWidget {

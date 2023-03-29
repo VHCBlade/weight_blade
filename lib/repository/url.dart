@@ -11,6 +11,6 @@ class UrlRepository extends Repository {
       ];
 
   void _launch(String target) {
-    launchUrl(Uri.parse(target));
+    launchUrl(Uri.parse(target), mode: LaunchMode.externalApplication);
   }
 }

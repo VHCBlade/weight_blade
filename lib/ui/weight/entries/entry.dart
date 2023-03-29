@@ -1,4 +1,5 @@
 import 'package:event_bloc/event_bloc_widgets.dart';
+import 'package:event_modals/event_modals.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weight_blade/event/weight.dart';
@@ -69,19 +70,13 @@ class WeightEntryHeader extends StatelessWidget {
             onPressed: () => deleteWeightEntry(context, entry),
             icon: const Icon(Icons.delete)),
         ElevatedButton(
-            onPressed: () async {
-              final eventChannel = context.eventChannel;
-              final updatedEntry = await showDialog(
+            onPressed: () => showEventDialog(
                   context: context,
-                  builder: (_) => WeightEntryWithDateModal(entry: entry));
-
-              if (updatedEntry == null) {
-                return;
-              }
-
-              eventChannel.fireEvent<WeightEntry>(
-                  WeightEvent.updateWeightEntry.event, updatedEntry);
-            },
+                  builder: (_) => WeightEntryWithDateModal(entry: entry),
+                  onResponse: (eventChannel, value) =>
+                      eventChannel.fireEvent<WeightEntry>(
+                          WeightEvent.updateWeightEntry.event, value),
+                ),
             child: const Text("Edit")),
       ],
     );

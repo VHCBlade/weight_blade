@@ -10,17 +10,8 @@ void deleteWeightEntry(BuildContext context, WeightEntry entry) {
 
   showEventDialog<bool>(
     context: context,
-    builder: (_) => AlertDialog(
-      title: const Text("Are you sure you want to delete this weight entry?"),
-      actions: [
-        OutlinedButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("Cancel")),
-        ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text("Confirm"))
-      ],
-    ),
+    builder: (_) => const ConfirmationDialog(
+        title: Text("Are you sure you want to delete this weight entry?")),
     showModal: settings.showDeleteConfirmation,
     defaultValue: !settings.showDeleteConfirmation,
     onResponse: (BlocEventChannel eventChannel, response) => response

@@ -30,9 +30,9 @@ dependencies:
   event_ads: ^0.1.0
   # event_ads:
   #   path: ../event_ads
-  # event_modals: ^0.1.0
-  event_modals:
-    path: ../vhcblade_modals
+  event_modals: ^0.1.0
+  # event_modals:
+  #   path: ../vhcblade_modals
 
   vhcblade_theme: ^0.2.3
   # vhcblade_theme:

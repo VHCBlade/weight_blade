@@ -122,7 +122,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return FadeThroughWidgetSwitcher(
       duration: const Duration(milliseconds: 1000),
-      builder: (context) => buildWidget(context),
+      builder: buildWidget,
     );
   }
 }

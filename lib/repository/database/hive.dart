@@ -8,12 +8,12 @@ import 'package:weight_blade/model/settings.dart';
 import 'package:weight_blade/model/weight.dart';
 
 final typeAdapters = <GenericTypeAdapter>[
-  GenericTypeAdapter<WeightEntry>(() => WeightEntry(), (_) => 1),
-  GenericTypeAdapter<Ledger>(() => Ledger(), (_) => 2),
-  GenericTypeAdapter<WeightGoal>(() => WeightGoal(), (_) => 3),
-  GenericTypeAdapter<Reminder>(() => Reminder(), (_) => 4),
-  GenericTypeAdapter<SelectedTheme>(() => SelectedTheme(), (_) => 5),
-  GenericTypeAdapter<WBSettingsModel>(() => WBSettingsModel(), (_) => 6),
-  GenericTypeAdapter<AdModel>(() => AdModel(), (_) => 7),
-  GenericTypeAdapter<UnlockedThemes>(() => UnlockedThemes(), (_) => 8),
+  GenericTypeAdapter<WeightEntry>(WeightEntry.new, (_) => 1),
+  GenericTypeAdapter<Ledger>(Ledger.new, (_) => 2),
+  GenericTypeAdapter<WeightGoal>(WeightGoal.new, (_) => 3),
+  GenericTypeAdapter<Reminder>(Reminder.new, (_) => 4),
+  GenericTypeAdapter<SelectedTheme>(SelectedTheme.new, (_) => 5),
+  GenericTypeAdapter<WBSettingsModel>(WBSettingsModel.new, (_) => 6),
+  GenericTypeAdapter<AdModel>(AdModel.new, (_) => 7),
+  GenericTypeAdapter<UnlockedThemes>(UnlockedThemes.new, (_) => 8),
 ];

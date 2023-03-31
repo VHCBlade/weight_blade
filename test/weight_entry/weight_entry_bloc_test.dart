@@ -20,7 +20,7 @@ void main() {
 
 void deleteTest() async {
   final repository = FakeDatabaseRepository(
-      constructors: {WeightEntry: () => WeightEntry(), Ledger: () => Ledger()});
+      constructors: {WeightEntry: WeightEntry.new, Ledger: Ledger.new});
 
   final bloc = WeightEntryBloc(parentChannel: null, database: repository);
   await add100WeightEntries(repository);
@@ -56,7 +56,7 @@ void deleteTest() async {
 
 void oldWeightEntryAddedTest() async {
   final repository = FakeDatabaseRepository(
-      constructors: {WeightEntry: () => WeightEntry(), Ledger: () => Ledger()});
+      constructors: {WeightEntry: WeightEntry.new, Ledger: Ledger.new});
 
   final bloc = WeightEntryBloc(parentChannel: null, database: repository);
   final dates = await add100WeightEntries(repository);
@@ -110,7 +110,7 @@ void oldWeightEntryAddedTest() async {
 
 void newWeightEntryAddedTest() async {
   final repository = FakeDatabaseRepository(
-      constructors: {WeightEntry: () => WeightEntry(), Ledger: () => Ledger()});
+      constructors: {WeightEntry: WeightEntry.new, Ledger: Ledger.new});
 
   final bloc = WeightEntryBloc(parentChannel: null, database: repository);
 
@@ -146,7 +146,7 @@ void newWeightEntryAddedTest() async {
 
 void ensureDateTimeIsShownTest() async {
   final repository = FakeDatabaseRepository(
-      constructors: {WeightEntry: () => WeightEntry(), Ledger: () => Ledger()});
+      constructors: {WeightEntry: WeightEntry.new, Ledger: Ledger.new});
 
   final bloc = WeightEntryBloc(parentChannel: null, database: repository);
 
@@ -177,7 +177,7 @@ void ensureDateTimeIsShownTest() async {
 
 void loadEntriesTest() async {
   final repository = FakeDatabaseRepository(
-      constructors: {WeightEntry: () => WeightEntry(), Ledger: () => Ledger()});
+      constructors: {WeightEntry: WeightEntry.new, Ledger: Ledger.new});
 
   final bloc = WeightEntryBloc(parentChannel: null, database: repository);
 

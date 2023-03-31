@@ -1,6 +1,7 @@
 ## 1.6.4 - 
 
 - Added Unit Tests for Weight Entry
+- Added unnecessary_lambdas to analysis_options.yaml and implemented the recommended changes
 
 ## 1.6.3 - March 27, 2023
 

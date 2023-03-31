@@ -13,7 +13,7 @@ final blocBuilders = [
   BlocBuilder<MainNavigationBloc<String>>(
       (read, channel) => generateNavigationBloc(parentChannel: channel)),
   BlocBuilder<WeightEntryBloc>((read, channel) => WeightEntryBloc(
-      parentChannel: channel, repo: read.read<DatabaseRepository>())),
+      parentChannel: channel, database: read.read<DatabaseRepository>())),
   BlocBuilder<WeightGoalBloc>((read, channel) => WeightGoalBloc(
       parentChannel: channel, repo: read.read<DatabaseRepository>())),
   BlocBuilder<WeightGoalWatcherBloc>(

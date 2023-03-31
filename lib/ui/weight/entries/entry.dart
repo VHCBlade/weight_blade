@@ -1,4 +1,3 @@
-import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:event_modals/event_modals.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

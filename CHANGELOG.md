@@ -1,3 +1,7 @@
+## 1.6.4 - 
+
+- Added Unit Tests for Weight Entry
+
 ## 1.6.3 - March 27, 2023
 
 - Fixed bug that caused reminders to not display on the correct weekday.

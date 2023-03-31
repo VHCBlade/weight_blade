@@ -13,7 +13,7 @@ const weightDb = "WEIGHT";
 const ledgerKey = "Ledger";
 
 class WeightEntryBloc extends Bloc {
-  final DatabaseRepository repo;
+  final DatabaseRepository database;
   final _addedWeight = StreamController<int>.broadcast();
   final _removedWeight = StreamController<Tuple2<int, WeightEntry>>.broadcast();
 
@@ -27,7 +27,7 @@ class WeightEntryBloc extends Bloc {
 
   bool get noEntries => ledger?.entries.isEmpty ?? true;
 
-  WeightEntryBloc({required super.parentChannel, required this.repo}) {
+  WeightEntryBloc({required super.parentChannel, required this.database}) {
     eventChannel.addEventListener<void>(
         LedgerEvent.loadLedger.event, (p0, p1) => loadLedger());
     eventChannel.addEventListener<Ledger>(
@@ -58,6 +58,9 @@ class WeightEntryBloc extends Bloc {
   WeightEntry? get latestEntry =>
       loadedEntries.isEmpty ? null : weightEntryMap[loadedEntries.first];
 
+  WeightEntry? get oldestLoadedEntry =>
+      loadedEntries.isEmpty ? null : weightEntryMap[loadedEntries.last];
+
   WeightEntry? entryAt(int position) => loadedEntries.length <= position
       ? null
       : weightEntryMap[loadedEntries[position]];
@@ -69,7 +72,7 @@ class WeightEntryBloc extends Bloc {
 
     loading = true;
     updateBloc();
-    ledger = await repo.findModel<Ledger>(weightDb, ledgerKey);
+    ledger = await database.findModel<Ledger>(weightDb, ledgerKey);
     loading = false;
     updateBloc();
   }
@@ -85,12 +88,12 @@ class WeightEntryBloc extends Bloc {
     ledger.id = ledgerKey;
     this.ledger = ledger;
     updateBloc();
-    await repo.saveModel<Ledger>(weightDb, ledger);
+    await database.saveModel<Ledger>(weightDb, ledger);
   }
 
   Future<void> ensureDateTimeIsShown(DateTime dateTime) async {
     while (loadedEntries.isEmpty ||
-        dateTime.isBefore(weightEntryMap[loadedEntries.last]!.dateTime)) {
+        dateTime.isBefore(oldestLoadedEntry!.dateTime)) {
       if (ledger == null || ledger!.entries.length <= loadedEntries.length) {
         return;
       }
@@ -110,8 +113,8 @@ class WeightEntryBloc extends Bloc {
         .take(entriesToLoad);
 
     // TODO WB-1 Combine loading of values into one.
-    final newLoadedEntries = await Future.wait(
-        entryKeys.map((e) => repo.findModel<WeightEntry>(weightDb, e)));
+    final newLoadedEntries = await Future.wait(entryKeys
+        .map((e) async => database.findModel<WeightEntry>(weightDb, e)));
 
     newLoadedEntries.where((element) => element != null).forEach((element) {
       loadedEntries.add(element!.id!);
@@ -140,9 +143,9 @@ class WeightEntryBloc extends Bloc {
     ledger!.entries.insert(0, entry.id!);
     await ensureCorrectOrder(entry);
 
-    await repo.saveModel<WeightEntry>(weightDb, entry);
+    await database.saveModel<WeightEntry>(weightDb, entry);
     _addedWeight.sink.add(loadedEntries.indexOf(entry.id!));
-    await repo.saveModel<Ledger>(weightDb, ledger!);
+    await database.saveModel<Ledger>(weightDb, ledger!);
 
     updateBloc();
   }
@@ -183,11 +186,11 @@ class WeightEntryBloc extends Bloc {
   }
 
   void updateWeightEntry(WeightEntry entry) async {
-    await repo.saveModel<WeightEntry>(weightDb, entry);
+    await database.saveModel<WeightEntry>(weightDb, entry);
     weightEntryMap[entry.id!] = entry;
     final initialLocation = loadedEntries.indexOf(entry.id!);
     if (!await ensureCorrectOrder(entry)) {
-      await repo.saveModel<Ledger>(weightDb, ledger!);
+      await database.saveModel<Ledger>(weightDb, ledger!);
       _removedWeight.add(Tuple2(initialLocation, entry));
       _addedWeight.add(loadedEntries.indexOf(entry.id!));
     }
@@ -196,7 +199,7 @@ class WeightEntryBloc extends Bloc {
   }
 
   void deleteWeightEntry(WeightEntry entry) async {
-    await repo.deleteModel<WeightEntry>(weightDb, entry);
+    await database.deleteModel<WeightEntry>(weightDb, entry);
     weightEntryMap[entry.id!] = entry;
 
     final location = loadedEntries.indexOf(entry.id!);
@@ -205,7 +208,7 @@ class WeightEntryBloc extends Bloc {
       _removedWeight.add(Tuple2(location, entry));
     }
     ledger!.entries.remove(entry.id!);
-    await repo.saveModel<Ledger>(weightDb, ledger!);
+    await database.saveModel<Ledger>(weightDb, ledger!);
 
     updateBloc();
   }

@@ -14,7 +14,44 @@ void main() {
     test("Ensure DateTime is Shown", ensureDateTimeIsShownTest);
     test("New Weight Entry Added", newWeightEntryAddedTest);
     test("Old Weight Entry Added", oldWeightEntryAddedTest);
+    test("Delete", deleteTest);
   });
+}
+
+void deleteTest() async {
+  final repository = FakeDatabaseRepository(
+      constructors: {WeightEntry: () => WeightEntry(), Ledger: () => Ledger()});
+
+  final bloc = WeightEntryBloc(parentChannel: null, database: repository);
+  await add100WeightEntries(repository);
+
+  bloc.eventChannel.fireEvent(LedgerEvent.loadLedger.event, null);
+  await Future.delayed(Duration.zero);
+  bloc.eventChannel.fireEvent(WeightEvent.loadNWeightEntries.event, 20);
+  await Future.delayed(Duration.zero);
+  bloc.eventChannel
+      .fireEvent(WeightEvent.deleteWeightEntry.event, bloc.latestEntry!);
+  await Future.delayed(Duration.zero);
+  bloc.eventChannel
+      .fireEvent(WeightEvent.deleteWeightEntry.event, bloc.oldestLoadedEntry!);
+  await Future.delayed(Duration.zero);
+
+  expect(bloc.loadedEntries.length, 18);
+  bloc.eventChannel
+      .fireEvent(WeightEvent.deleteWeightEntry.event, bloc.entryAt(5)!);
+  await Future.delayed(Duration.zero);
+  expect(bloc.loadedEntries.length, 17);
+
+  final differentBloc =
+      WeightEntryBloc(parentChannel: null, database: repository);
+
+  differentBloc.eventChannel.fireEvent(LedgerEvent.loadLedger.event, null);
+  await Future.delayed(Duration.zero);
+  differentBloc.eventChannel
+      .fireEvent(WeightEvent.loadNWeightEntries.event, 100);
+  await Future.delayed(Duration.zero);
+
+  expect(differentBloc.loadedEntries.length, 97);
 }
 
 void oldWeightEntryAddedTest() async {

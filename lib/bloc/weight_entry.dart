@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:event_bloc/event_bloc.dart';
 import 'package:event_db/event_db.dart';
 import 'package:tuple/tuple.dart';
-import 'package:uuid/uuid.dart';
 import 'package:weight_blade/event/ledger.dart';
 import 'package:weight_blade/event/weight.dart';
 import 'package:weight_blade/model/ledger.dart';
@@ -22,7 +21,10 @@ class WeightEntryBloc extends Bloc {
 
   Ledger? ledger;
   final loadedEntries = <String>[];
-  final weightEntryMap = <String, WeightEntry>{};
+  late final weightEntryMap = GenericModelMap<WeightEntry>(
+      repository: () => database,
+      supplier: WeightEntry.new,
+      defaultDatabaseName: weightDb);
   bool loading = false;
 
   bool get noEntries => ledger?.entries.isEmpty ?? true;
@@ -56,14 +58,14 @@ class WeightEntryBloc extends Bloc {
   }
 
   WeightEntry? get latestEntry =>
-      loadedEntries.isEmpty ? null : weightEntryMap[loadedEntries.first];
+      loadedEntries.isEmpty ? null : weightEntryMap.map[loadedEntries.first];
 
   WeightEntry? get oldestLoadedEntry =>
-      loadedEntries.isEmpty ? null : weightEntryMap[loadedEntries.last];
+      loadedEntries.isEmpty ? null : weightEntryMap.map[loadedEntries.last];
 
   WeightEntry? entryAt(int position) => loadedEntries.length <= position
       ? null
-      : weightEntryMap[loadedEntries[position]];
+      : weightEntryMap.map[loadedEntries[position]];
 
   void loadLedger() async {
     if (loading) {
@@ -101,6 +103,10 @@ class WeightEntryBloc extends Bloc {
     }
   }
 
+  void sortEntriesByDate() =>
+      loadedEntries.sort((a, b) => weightEntryMap.map[b]!.dateTime
+          .compareTo(weightEntryMap.map[a]!.dateTime));
+
   Future<void> loadWeightEntries(int entriesToLoad) async {
     if (ledger == null) {
       return;
@@ -113,38 +119,29 @@ class WeightEntryBloc extends Bloc {
         .take(entriesToLoad);
 
     // TODO WB-1 Combine loading of values into one.
-    final newLoadedEntries = await Future.wait(entryKeys
-        .map((e) async => database.findModel<WeightEntry>(weightDb, e)));
+    final newLoadedEntries = await weightEntryMap.loadModelIds(entryKeys);
 
-    newLoadedEntries.where((element) => element != null).forEach((element) {
-      loadedEntries.add(element!.id!);
+    newLoadedEntries.forEach((element) {
+      loadedEntries.add(element.id!);
       _addedWeight.sink.add(loadedEntries.length - 1);
-      weightEntryMap[element.id!] = element;
     });
 
-    loadedEntries.sort((a, b) =>
-        weightEntryMap[b]!.dateTime.compareTo(weightEntryMap[a]!.dateTime));
+    sortEntriesByDate();
 
     updateBloc();
   }
 
-  int decrement = 6;
-
   void addWeightEntry(WeightEntry entry) async {
-    entry.id = const Uuid().v4();
-    decrement--;
-
-    loadedEntries.insert(0, entry.id!);
-    weightEntryMap[entry.id!] = entry;
+    final newEntry = await weightEntryMap.addModel(entry);
+    loadedEntries.insert(0, newEntry.id!);
 
     ledger = ledger ?? Ledger()
       ..id = ledgerKey;
 
-    ledger!.entries.insert(0, entry.id!);
-    await ensureCorrectOrder(entry);
+    ledger!.entries.insert(0, newEntry.id!);
+    await ensureCorrectOrder(newEntry);
 
-    await database.saveModel<WeightEntry>(weightDb, entry);
-    _addedWeight.sink.add(loadedEntries.indexOf(entry.id!));
+    _addedWeight.sink.add(loadedEntries.indexOf(newEntry.id!));
     await database.saveModel<Ledger>(weightDb, ledger!);
 
     updateBloc();
@@ -159,8 +156,7 @@ class WeightEntryBloc extends Bloc {
     await ensureDateTimeIsShown(
         entry.dateTime.subtract(const Duration(seconds: 1)));
 
-    loadedEntries.sort((a, b) =>
-        weightEntryMap[b]!.dateTime.compareTo(weightEntryMap[a]!.dateTime));
+    sortEntriesByDate();
     ledger!.entries = [
       ...loadedEntries,
       ...ledger!.entries.sublist(loadedEntries.length)
@@ -173,21 +169,19 @@ class WeightEntryBloc extends Bloc {
     final location = loadedEntries.indexOf(entry.id!);
 
     if (location > 0 &&
-        weightEntryMap[loadedEntries[location - 1]]!
-            .dateTime
+        weightEntryMap.map[loadedEntries[location - 1]]!.dateTime
             .isBefore(entry.dateTime)) {
       return false;
     }
 
     return location + 1 < loadedEntries.length &&
-        weightEntryMap[loadedEntries[location + 1]]!
-            .dateTime
+        weightEntryMap.map[loadedEntries[location + 1]]!.dateTime
             .isBefore(entry.dateTime);
   }
 
   void updateWeightEntry(WeightEntry entry) async {
     await database.saveModel<WeightEntry>(weightDb, entry);
-    weightEntryMap[entry.id!] = entry;
+    weightEntryMap.map[entry.id!] = entry;
     final initialLocation = loadedEntries.indexOf(entry.id!);
     if (!await ensureCorrectOrder(entry)) {
       await database.saveModel<Ledger>(weightDb, ledger!);
@@ -199,8 +193,9 @@ class WeightEntryBloc extends Bloc {
   }
 
   void deleteWeightEntry(WeightEntry entry) async {
-    await database.deleteModel<WeightEntry>(weightDb, entry);
-    weightEntryMap[entry.id!] = entry;
+    if (!await weightEntryMap.deleteModel(entry)) {
+      return;
+    }
 
     final location = loadedEntries.indexOf(entry.id!);
     if (location >= 0) {

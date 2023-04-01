@@ -31,7 +31,7 @@ class _GraphScreenState extends State<GraphScreen> {
     final bloc = context.readBloc<WeightEntryBloc>();
     weightUnit = bloc.loadedEntries.isEmpty
         ? WeightUnit.lbs
-        : bloc.weightEntryMap[bloc.loadedEntries[0]]!.unit;
+        : bloc.weightEntryMap.map[bloc.loadedEntries[0]]!.unit;
   }
 
   void updateMonth(DateTime dateTime) {
@@ -46,7 +46,7 @@ class _GraphScreenState extends State<GraphScreen> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.watchBloc<WeightEntryBloc>();
-    final includedEntries = bloc.weightEntryMap.values
+    final includedEntries = bloc.weightEntryMap.map.values
         .where(withinTimeRange)
         .map((e) => e.weightInUnits(weightUnit));
 
@@ -74,13 +74,13 @@ class _GraphScreenState extends State<GraphScreen> {
                       .microsecondsSinceEpoch
                       .toDouble(),
                   minY: (includedEntries.isEmpty
-                          ? bloc.weightEntryMap[bloc.loadedEntries[0]]!
+                          ? bloc.weightEntryMap.map[bloc.loadedEntries[0]]!
                                   .weightInUnits(weightUnit) -
                               1
                           : includedEntries.reduce((a, b) => a < b ? a : b) - 1)
                       .roundToDouble(),
                   maxY: (includedEntries.isEmpty
-                          ? bloc.weightEntryMap[bloc.loadedEntries[0]]!
+                          ? bloc.weightEntryMap.map[bloc.loadedEntries[0]]!
                                   .weightInUnits(weightUnit) +
                               2
                           : includedEntries.reduce((a, b) => a > b ? a : b) + 2)
@@ -144,7 +144,8 @@ class _GraphScreenState extends State<GraphScreen> {
                   lineTouchData: LineTouchData(
                       touchTooltipData: LineTouchTooltipData(
                           getTooltipItems: (list) => list.map((val) {
-                                final weightEntry = bloc.weightEntryMap.values
+                                final weightEntry = bloc
+                                    .weightEntryMap.map.values
                                     .firstWhere((element) =>
                                         element
                                             .dateTime.microsecondsSinceEpoch ==
@@ -214,7 +215,7 @@ class _GraphScreenState extends State<GraphScreen> {
 
   List<FlSpot> getSpots(WeightEntryBloc bloc) {
     return bloc.loadedEntries
-        .map((element) => bloc.weightEntryMap[element]!)
+        .map((element) => bloc.weightEntryMap.map[element]!)
         .map((element) => FlSpot(
               element.dateTime.microsecondsSinceEpoch.toDouble(),
               element.weightInUnits(weightUnit),

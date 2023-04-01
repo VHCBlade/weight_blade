@@ -73,7 +73,7 @@ void oldWeightEntryAddedTest() async {
   dates.insert(1, DateTime(1997, 3, 5));
   await Future.delayed(Duration.zero);
 
-  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime),
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
       dates.take(21));
 
   bloc.eventChannel.fireEvent(
@@ -83,7 +83,7 @@ void oldWeightEntryAddedTest() async {
         ..dateTime = DateTime(1993, 1, 5));
   await Future.delayed(Duration.zero);
   dates.insert(52, DateTime(1993, 1, 5));
-  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime),
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
       dates.take(62));
 
   bloc.eventChannel.fireEvent(
@@ -93,8 +93,8 @@ void oldWeightEntryAddedTest() async {
         ..dateTime = DateTime(1970, 1, 5));
   await Future.delayed(Duration.zero);
   dates.add(DateTime(1970, 1, 5));
-  expect(
-      bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime), dates);
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
+      dates);
 
   final differentBloc =
       WeightEntryBloc(parentChannel: null, database: repository);
@@ -104,7 +104,8 @@ void oldWeightEntryAddedTest() async {
       .fireEvent(WeightEvent.loadNWeightEntries.event, 1000);
   await Future.delayed(Duration.zero);
   expect(
-      differentBloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime),
+      differentBloc.loadedEntries
+          .map((e) => bloc.weightEntryMap.map[e]!.dateTime),
       dates);
 }
 
@@ -159,20 +160,20 @@ void ensureDateTimeIsShownTest() async {
   bloc.eventChannel
       .fireEvent(WeightEvent.ensureDateTimeIsShown.event, DateTime(1997, 1));
   await Future.delayed(Duration.zero);
-  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime),
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
       dates.take(20));
 
   bloc.eventChannel
       .fireEvent(WeightEvent.ensureDateTimeIsShown.event, DateTime(1993, 1));
   await Future.delayed(Duration.zero);
-  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime),
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
       dates.take(60));
 
   bloc.eventChannel
       .fireEvent(WeightEvent.ensureDateTimeIsShown.event, DateTime(1970, 1));
   await Future.delayed(Duration.zero);
-  expect(
-      bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime), dates);
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
+      dates);
 }
 
 void loadEntriesTest() async {
@@ -191,16 +192,16 @@ void loadEntriesTest() async {
   await Future.delayed(Duration.zero);
   bloc.eventChannel.fireEvent(WeightEvent.loadNWeightEntries.event, 20);
   await Future.delayed(Duration.zero);
-  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime),
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
       dates.take(20));
 
   bloc.eventChannel.fireEvent(WeightEvent.loadNWeightEntries.event, 50);
   await Future.delayed(Duration.zero);
-  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime),
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
       dates.take(70));
 
   bloc.eventChannel.fireEvent(WeightEvent.loadNWeightEntries.event, 50);
   await Future.delayed(Duration.zero);
-  expect(
-      bloc.loadedEntries.map((e) => bloc.weightEntryMap[e]!.dateTime), dates);
+  expect(bloc.loadedEntries.map((e) => bloc.weightEntryMap.map[e]!.dateTime),
+      dates);
 }

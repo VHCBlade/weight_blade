@@ -1,3 +1,7 @@
+## 1.6.5 - 
+
+- Upgraded to event_db 0.1.4 and integrated the new features into the code.
+
 ## 1.6.4 - March 31, 2023
 
 - Added Unit Tests for Weight Entry

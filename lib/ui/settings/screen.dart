@@ -60,6 +60,12 @@ class SettingsPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 10),
           ]),
+          if (kIsWeb)
+            ListTile(
+              title: const Text("Get the Android Mobile App"),
+              onTap: () => context.fireEvent(EssayEvent.url.event,
+                  "https://play.google.com/store/apps/details?id=com.vhcblade.weight_blade&hl=en_US&gl=US"),
+            ),
           const ListTile(title: Text("Change Settings"), selected: true),
           const DeleteConfirmationSettings(),
           const AutomaticallyConverUnitsSetting(),

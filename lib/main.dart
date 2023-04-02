@@ -26,24 +26,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      repositoryBuilders: pocRepositoryBuilders,
-      child: MultiBlocProvider(
-        blocBuilders: blocBuilders,
-        child: VHCBladeThemeBuilder(
-          builder: (context, theme) => EventNavigationApp(
-            title: 'Weight Blade',
-            theme: theme,
-            builder: (_) => Overlay(
-              initialEntries: [
-                OverlayEntry(
-                  builder: (context) => Navigator(
-                    onGenerateRoute: (_) => MaterialPageRoute(
-                      builder: (_) => const MainScreen(),
+    return BlocEventChannelDebuggerProvider(
+      create: (context, channel) => BlocEventChannelDebugger(
+        parentChannel: channel,
+        printHandled: false,
+        printUnhandled: true,
+      ),
+      child: MultiRepositoryProvider(
+        repositoryBuilders: pocRepositoryBuilders,
+        child: MultiBlocProvider(
+          blocBuilders: blocBuilders,
+          child: VHCBladeThemeBuilder(
+            builder: (context, theme) => EventNavigationApp(
+              title: 'Weight Blade',
+              theme: theme,
+              builder: (_) => Overlay(
+                initialEntries: [
+                  OverlayEntry(
+                    builder: (context) => Navigator(
+                      onGenerateRoute: (_) => MaterialPageRoute(
+                        builder: (_) => const MainScreen(),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -84,14 +91,14 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   }
 
   Widget buildWidget(BuildContext context) {
-    final bloc = BlocProvider.watch<WeightEntryBloc>(context);
+    final bloc = context.watchBloc<WeightEntryBloc>();
 
     if (bloc.loading) {
       return Scaffold(
           key: _loading,
           body: const Center(child: CupertinoActivityIndicator()));
     }
-    final navBloc = BlocProvider.watch<MainNavigationBloc<String>>(context);
+    final navBloc = context.watchBloc<MainNavigationBloc<String>>();
 
     final navigationBar = MainNavigationBar(
       currentNavigation: navBloc.currentMainNavigation,

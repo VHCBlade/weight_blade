@@ -1,6 +1,8 @@
-## 1.6.5 - 
+## 1.6.5 - April 2, 2023
 
 - Upgraded to event_db 0.1.4 and integrated the new features into the code.
+- Changed url launching to open an external application, rather than depend on the system preference
+- Added integration with event_bloc 4.3.2
 
 ## 1.6.4 - March 31, 2023
 

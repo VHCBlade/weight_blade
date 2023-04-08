@@ -197,10 +197,10 @@ packages:
     dependency: "direct main"
     description:
       name: event_db
-      sha256: fe6417da2adcf6265d9baaeaef1bbfd6ff1b6f5fbae9316e022af86d28c7f578
+      sha256: "1f213c99218ecc20c1d7a6c3e668de69b4d04787258ff3a396b7f6bdaf65a06d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.4+1"
+    version: "0.1.5"
   event_essay:
     dependency: "direct main"
     description:

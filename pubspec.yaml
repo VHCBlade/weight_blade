@@ -18,7 +18,7 @@ dependencies:
 
   event_essay: ^0.1.0
   event_bloc: ^4.3.2
-  event_db: ^0.1.4+1
+  event_db: ^0.1.5
   # event_db:
   #   path: ../event_db
   # event_hive: ^0.1.4

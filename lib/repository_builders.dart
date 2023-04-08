@@ -25,3 +25,13 @@ final pocRepositoryBuilders = [
         rewardedId: "ca-app-pub-1198511294368540/5161988843",
       ))),
 ];
+
+final fakeRepositoryBuilders = [
+  RepositoryBuilder<DatabaseRepository>((read) =>
+      FakeDatabaseRepository(constructors: {
+        for (var val in typeAdapters) val.instance.runtimeType: val.generator
+      })),
+  RepositoryBuilder<NotificationRepository>(
+      (read) => FakeNotificationsRepository()),
+  // TODO Add the other repositories here.
+];

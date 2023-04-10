@@ -4,14 +4,28 @@ import 'package:weight_blade/bloc/settings/extension.dart';
 import 'package:weight_blade/model/goal.dart';
 import 'package:weight_blade/model/weight.dart';
 
+const weightEntryCancelKey = ValueKey("WeightEntryModal Cancel");
+const weightEntrySaveKey = ValueKey("WeightEntryModal Save");
+const weightEntryWeightTextKey = ValueKey("WeightEntryModal WeightText");
+const weightEntryUnitKey = ValueKey("WeightEntryModal Unit");
+const weightEntryNoteKey = ValueKey("WeightEntryModal Note");
+const weightEntryNoteTextKey = ValueKey("WeightEntryModal NoteText");
+
 class WeightEntryModal extends StatefulWidget {
   final WeightEntry? entry;
   final void Function(WeightEntry)? onSave;
   final Widget? extraContent;
   final Widget? title;
+  final bool keepNote;
 
-  const WeightEntryModal(
-      {super.key, this.entry, this.onSave, this.extraContent, this.title});
+  const WeightEntryModal({
+    super.key,
+    this.entry,
+    this.onSave,
+    this.extraContent,
+    this.title,
+    this.keepNote = false,
+  });
 
   @override
   State<WeightEntryModal> createState() => _WeightEntryModalState();
@@ -27,7 +41,8 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
     super.initState();
     focusNode.requestFocus();
     if (widget.entry != null) {
-      currentEntry.copy(widget.entry!, exceptFields: ["note"]);
+      currentEntry
+          .copy(widget.entry!, exceptFields: [if (!widget.keepNote) "note"]);
     }
   }
 
@@ -56,6 +71,7 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
           Row(children: [
             Expanded(
               child: TextField(
+                key: weightEntryWeightTextKey,
                 controller: controller,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
@@ -66,6 +82,7 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
             ),
             const SizedBox(width: 10),
             ElevatedButton(
+                key: weightEntryUnitKey,
                 onPressed: () {
                   final unit = currentEntry.unit == WeightUnit.lbs
                       ? WeightUnit.kg
@@ -89,9 +106,15 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
         ]),
         actions: [
           OutlinedButton(
-              onPressed: () => Navigator.of(context).pop(null),
-              child: const Text("Cancel")),
-          ElevatedButton(onPressed: onSave, child: const Text("Save")),
+            key: weightEntryCancelKey,
+            onPressed: () => Navigator.of(context).pop(null),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            key: weightEntrySaveKey,
+            onPressed: onSave,
+            child: const Text("Save"),
+          ),
         ]);
   }
 }
@@ -154,7 +177,9 @@ class _WeightGoalModalState extends State<WeightGoalModal> {
 
 class WeightEntryWithDateModal extends StatefulWidget {
   final WeightEntry? entry;
-  const WeightEntryWithDateModal({super.key, this.entry});
+  final bool keepNote;
+  const WeightEntryWithDateModal(
+      {super.key, this.entry, this.keepNote = false});
 
   @override
   State<WeightEntryWithDateModal> createState() => _WeightEntryWithDateModal();
@@ -173,6 +198,7 @@ class _WeightEntryWithDateModal extends State<WeightEntryWithDateModal> {
   Widget build(BuildContext context) {
     return WeightEntryModal(
       entry: widget.entry,
+      keepNote: widget.keepNote,
       extraContent: Padding(
         padding: const EdgeInsets.only(top: 13),
         child: Row(

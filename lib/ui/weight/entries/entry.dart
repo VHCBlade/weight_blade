@@ -71,7 +71,10 @@ class WeightEntryHeader extends StatelessWidget {
         ElevatedButton(
             onPressed: () => showEventDialog(
                   context: context,
-                  builder: (_) => WeightEntryWithDateModal(entry: entry),
+                  builder: (_) => WeightEntryWithDateModal(
+                    entry: entry,
+                    keepNote: true,
+                  ),
                   onResponse: (eventChannel, value) =>
                       eventChannel.fireEvent<WeightEntry>(
                           WeightEvent.updateWeightEntry.event, value),

@@ -87,7 +87,7 @@ class _GraphScreenState extends State<GraphScreen> {
                       .roundToDouble(),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
-                      drawBehindEverything: false,
+                      drawBehindEverything: true,
                       sideTitles: SideTitles(
                         reservedSize: 60,
                         getTitlesWidget: (value, meta) => ColoredBox(
@@ -104,7 +104,7 @@ class _GraphScreenState extends State<GraphScreen> {
                       ),
                     ),
                     bottomTitles: AxisTitles(
-                      drawBehindEverything: false,
+                      drawBehindEverything: true,
                       sideTitles: SideTitles(
                         reservedSize: 60,
                         getTitlesWidget: (value, meta) => ColoredBox(

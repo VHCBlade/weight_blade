@@ -1,3 +1,8 @@
+## 1.6.6 - April 10, 2023
+
+- Fixed Bug that caused editted WeightEntries to lose their Note.
+- Changed graph tags to be drawn behind everything
+
 ## 1.6.5 - April 2, 2023
 
 - Upgraded to event_db 0.1.4 and integrated the new features into the code.

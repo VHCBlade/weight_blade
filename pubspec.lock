@@ -189,10 +189,10 @@ packages:
     dependency: "direct dev"
     description:
       name: event_bloc_tester
-      sha256: "258817541dde12a2348b1cb82bb26e31db6c9a90fa001c0f9bc19799b3c5aed8"
+      sha256: eaa81cd216583b8bae67a70c4b6174b3fb900ec8377e8fdb5b833161a3da3020
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2+1"
   event_db:
     dependency: "direct main"
     description:

@@ -118,7 +118,6 @@ class WeightEntryBloc extends Bloc {
         .where((element) => !loadedSet.contains(element))
         .take(entriesToLoad);
 
-    // TODO WB-1 Combine loading of values into one.
     final newLoadedEntries = await weightEntryMap.loadModelIds(entryKeys);
 
     newLoadedEntries.forEach((element) {

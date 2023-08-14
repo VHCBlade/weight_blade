@@ -27,7 +27,7 @@ class WeightModalTester extends StatelessWidget {
           onPressed: () => showEventDialog<WeightEntry>(
               context: context,
               builder: (_) => WeightEntryWithDateModal(
-                  entry: initialValue, keepNote: keepNote),
+                  entry: initialValue, editWeight: keepNote),
               onResponse: (eventChannel, entry) {
                 tester.addTestValue(entry.dateTime
                     .isAfter(initialValue?.dateTime ?? DateTime(1990)));

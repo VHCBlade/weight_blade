@@ -16,7 +16,7 @@ class WeightEntryModal extends StatefulWidget {
   final void Function(WeightEntry)? onSave;
   final Widget? extraContent;
   final Widget? title;
-  final bool keepNote;
+  final bool editWeight;
 
   const WeightEntryModal({
     super.key,
@@ -24,7 +24,7 @@ class WeightEntryModal extends StatefulWidget {
     this.onSave,
     this.extraContent,
     this.title,
-    this.keepNote = false,
+    this.editWeight = false,
   });
 
   @override
@@ -42,7 +42,7 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
     focusNode.requestFocus();
     if (widget.entry != null) {
       currentEntry
-          .copy(widget.entry!, exceptFields: [if (!widget.keepNote) "note"]);
+          .copy(widget.entry!, exceptFields: [if (!widget.editWeight) "note"]);
     }
   }
 
@@ -66,7 +66,10 @@ class _WeightEntryModalState extends State<WeightEntryModal> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: widget.title ?? const Text("Set Weight"),
+        title: widget.title ??
+            (widget.editWeight
+                ? const Text('Edit Weight')
+                : const Text('Add Weight')),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           Row(children: [
             Expanded(
@@ -177,9 +180,12 @@ class _WeightGoalModalState extends State<WeightGoalModal> {
 
 class WeightEntryWithDateModal extends StatefulWidget {
   final WeightEntry? entry;
-  final bool keepNote;
-  const WeightEntryWithDateModal(
-      {super.key, this.entry, this.keepNote = false});
+  final bool editWeight;
+  const WeightEntryWithDateModal({
+    super.key,
+    this.entry,
+    this.editWeight = false,
+  });
 
   @override
   State<WeightEntryWithDateModal> createState() => _WeightEntryWithDateModal();
@@ -198,7 +204,7 @@ class _WeightEntryWithDateModal extends State<WeightEntryWithDateModal> {
   Widget build(BuildContext context) {
     return WeightEntryModal(
       entry: widget.entry,
-      keepNote: widget.keepNote,
+      editWeight: widget.editWeight,
       extraContent: Padding(
         padding: const EdgeInsets.only(top: 13),
         child: Row(
@@ -224,7 +230,6 @@ class _WeightEntryWithDateModal extends State<WeightEntryWithDateModal> {
         entry.dateTime = dateTime;
         Navigator.of(context).pop(entry);
       },
-      title: const Text("Set Goal"),
     );
   }
 }

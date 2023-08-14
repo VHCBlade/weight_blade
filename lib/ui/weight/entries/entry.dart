@@ -73,7 +73,7 @@ class WeightEntryHeader extends StatelessWidget {
             context: context,
             builder: (_) => WeightEntryWithDateModal(
               entry: entry,
-              keepNote: true,
+              editWeight: true,
             ),
             onResponse: (eventChannel, value) =>
                 eventChannel.fireEvent<WeightEntry>(

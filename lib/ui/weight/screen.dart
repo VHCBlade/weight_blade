@@ -73,10 +73,11 @@ class _WeightScreenState extends State<WeightScreen> {
               eventChannel.fireEvent<WeightEntry>(
                   WeightEvent.addWeightEntry.event, response),
           builder: (_) => WeightEntryWithDateModal(
-              entry: WeightEntry()
-                ..copy(weightBloc.latestEntry ?? WeightEntry())
-                ..id = null
-                ..dateTime = DateTime.now()),
+            entry: WeightEntry()
+              ..copy(weightBloc.latestEntry ?? WeightEntry())
+              ..id = null
+              ..dateTime = DateTime.now(),
+          ),
         ),
       ),
     );

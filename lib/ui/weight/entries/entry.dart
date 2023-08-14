@@ -69,17 +69,18 @@ class WeightEntryHeader extends StatelessWidget {
             onPressed: () => deleteWeightEntry(context, entry),
             icon: const Icon(Icons.delete)),
         ElevatedButton(
-            onPressed: () => showEventDialog(
-                  context: context,
-                  builder: (_) => WeightEntryWithDateModal(
-                    entry: entry,
-                    keepNote: true,
-                  ),
-                  onResponse: (eventChannel, value) =>
-                      eventChannel.fireEvent<WeightEntry>(
-                          WeightEvent.updateWeightEntry.event, value),
-                ),
-            child: const Text("Edit")),
+          onPressed: () => showEventDialog<WeightEntry>(
+            context: context,
+            builder: (_) => WeightEntryWithDateModal(
+              entry: entry,
+              keepNote: true,
+            ),
+            onResponse: (eventChannel, value) =>
+                eventChannel.fireEvent<WeightEntry>(
+                    WeightEvent.updateWeightEntry.event, value),
+          ),
+          child: const Text("Edit"),
+        ),
       ],
     );
   }

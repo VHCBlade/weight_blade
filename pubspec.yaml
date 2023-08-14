@@ -2,7 +2,7 @@ name: weight_blade
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.6.6+3
+version: 1.7.0+4
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  alarm: ^0.2.3
+  alarm: ^1.2.1
   animations: ^2.0.0
   carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.2
@@ -21,28 +21,29 @@ dependencies:
   event_db: ^0.1.5
   # event_db:
   #   path: ../event_db
-  # event_hive: ^0.1.4
-  event_hive:
-    path: ../event_hive
+  event_hive: ^0.1.4
+  # event_hive:
+  #   path: ../event_hive
   event_navigation: ^0.6.2
   # event_navigation:
   #   path: ../event-navigation
-  event_ads: ^0.1.0
+  event_ads: ^0.2.0
   # event_ads:
   #   path: ../event_ads
   event_modals: ^0.1.0
   # event_modals:
   #   path: ../vhcblade_modals
+  fluttertoast: ^8.2.2
 
   vhcblade_theme: ^0.2.3
   # vhcblade_theme:
   #   path: ../vhcblade_theme
 
-  fl_chart: ^0.61.0
+  fl_chart: ^0.63.0
   flutter_markdown: ^0.6.13
   flutter_native_timezone: ^2.0.0
-  flutter_local_notifications: ^13.0.0
-  google_mobile_ads: ^2.3.0
+  flutter_local_notifications: ^14.0.0
+  google_mobile_ads: ^3.0.0
   
   intl: ^0.18.0
   math_parser: ^1.5.0
@@ -58,7 +59,7 @@ dev_dependencies:
     sdk: flutter
 
   event_bloc_tester: ^0.1.2+1
-  flutter_launcher_icons: ^0.12.0
+  flutter_launcher_icons: ^0.13.0
   flutter_lints: ^2.0.0
 
 flutter:

@@ -1,4 +1,10 @@
-## 1.6.6 - April 10, 2023
+## 1.7.0+4 - August 14, 2023
+
+- Updated packages to latest versions
+- Added dev for easily testing things like showing ads
+- Added loading ad toast as ad is being loaded.
+
+## 1.6.6+3 - April 10, 2023
 
 - Fixed Bug that caused editted WeightEntries to lose their Note.
 - Changed graph tags to be drawn behind everything

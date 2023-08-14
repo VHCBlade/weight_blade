@@ -70,7 +70,7 @@ class LocalNotificationRepository extends NotificationRepository {
           importance: Importance.high,
           priority: Priority.high,
         )),
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.alarmClock,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.wallClockTime,

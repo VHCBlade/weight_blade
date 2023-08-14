@@ -60,6 +60,14 @@ class SettingsPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 10),
           ]),
+          if (kDebugMode) ...[
+            const ListTile(title: Text("Dev"), selected: true),
+            ListTile(
+              title: const Text("Show Ad"),
+              onTap: () => context.eventChannel.eventBus
+                  .fireEvent(AdEvent.loadingAd.event, null),
+            ),
+          ],
           if (kIsWeb)
             ListTile(
               title: const Text("Get the Android Mobile App"),

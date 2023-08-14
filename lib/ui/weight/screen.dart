@@ -67,7 +67,7 @@ class _WeightScreenState extends State<WeightScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add,
             color: Theme.of(context).textTheme.displayMedium?.color),
-        onPressed: () => showEventDialog(
+        onPressed: () => showEventDialog<WeightEntry>(
           context: context,
           onResponse: (BlocEventChannel eventChannel, response) =>
               eventChannel.fireEvent<WeightEntry>(

@@ -66,7 +66,7 @@ class _GraphScreenState extends State<GraphScreen> {
             Expanded(
               child: LineChart(
                 LineChartData(
-                  clipData: FlClipData.all(),
+                  clipData: const FlClipData.all(),
                   minX: DateTime(dateTime.year, dateTime.month)
                       .microsecondsSinceEpoch
                       .toDouble(),
@@ -87,7 +87,6 @@ class _GraphScreenState extends State<GraphScreen> {
                       .roundToDouble(),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
-                      drawBehindEverything: true,
                       sideTitles: SideTitles(
                         reservedSize: 60,
                         getTitlesWidget: (value, meta) => ColoredBox(
@@ -104,7 +103,6 @@ class _GraphScreenState extends State<GraphScreen> {
                       ),
                     ),
                     bottomTitles: AxisTitles(
-                      drawBehindEverything: true,
                       sideTitles: SideTitles(
                         reservedSize: 60,
                         getTitlesWidget: (value, meta) => ColoredBox(
@@ -121,13 +119,13 @@ class _GraphScreenState extends State<GraphScreen> {
                         showTitles: true,
                       ),
                     ),
-                    rightTitles: AxisTitles(),
-                    topTitles: AxisTitles(),
+                    rightTitles: const AxisTitles(),
+                    topTitles: const AxisTitles(),
                   ),
                   gridData: FlGridData(
                     show: true,
                     getDrawingHorizontalLine: (value) {
-                      return FlLine(
+                      return const FlLine(
                         color: Colors.grey,
                         strokeWidth: 0.5,
                       );

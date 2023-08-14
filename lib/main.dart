@@ -12,6 +12,7 @@ import 'package:weight_blade/event/reminder.dart';
 import 'package:weight_blade/event/settings.dart';
 import 'package:weight_blade/main_transfer.dart';
 import 'package:weight_blade/repository_builders.dart';
+import 'package:weight_blade/ui/watcher/watcher_layer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
                   OverlayEntry(
                     builder: (context) => Navigator(
                       onGenerateRoute: (_) => MaterialPageRoute(
-                        builder: (_) => const MainScreen(),
+                        builder: (_) => const WatcherLayer(child: MainScreen()),
                       ),
                     ),
                   ),

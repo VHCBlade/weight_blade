@@ -28,9 +28,7 @@ class WeightModalTester extends StatelessWidget {
               context: context,
               builder: (_) => WeightEntryWithDateModal(
                   entry: initialValue, keepNote: keepNote),
-              onResponse: (eventChannel, newValue) {
-                final entry = newValue as WeightEntry;
-
+              onResponse: (eventChannel, entry) {
                 tester.addTestValue(entry.dateTime
                     .isAfter(initialValue?.dateTime ?? DateTime(1990)));
                 tester.addTestValue("${entry.unit}");

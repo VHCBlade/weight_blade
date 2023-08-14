@@ -3,6 +3,7 @@
 - Updated packages to latest versions
 - Added dev for easily testing things like showing ads
 - Added loading ad toast as ad is being loaded.
+- Fixed Edit Weight Modal Labels
 
 ## 1.6.6+3 - April 10, 2023
 

@@ -22,9 +22,10 @@ class WeightEntryBloc extends Bloc {
   Ledger? ledger;
   final loadedEntries = <String>[];
   late final weightEntryMap = GenericModelMap<WeightEntry>(
-      repository: () => database,
-      supplier: WeightEntry.new,
-      defaultDatabaseName: weightDb);
+    repository: () => database,
+    supplier: WeightEntry.new,
+    defaultDatabaseName: weightDb,
+  );
   bool loading = false;
 
   bool get noEntries => ledger?.entries.isEmpty ?? true;
@@ -46,8 +47,11 @@ class WeightEntryBloc extends Bloc {
     eventChannel.addEventListener<WeightEntry>(
         WeightEvent.deleteWeightEntry.event, (p0, p1) => deleteWeightEntry(p1));
     eventChannel.addEventListener<DateTime>(
-        WeightEvent.ensureDateTimeIsShown.event,
-        (p0, p1) => ensureDateTimeIsShown(p1));
+      WeightEvent.ensureDateTimeIsShown.event,
+      (p0, p1) => ensureDateTimeIsShown(p1),
+    );
+    eventChannel.addEventBusListener(
+        WeightEvent.reset.event, (event, value) => reset());
   }
 
   @override
@@ -55,6 +59,12 @@ class WeightEntryBloc extends Bloc {
     super.dispose();
     _addedWeight.close();
     _removedWeight.close();
+  }
+
+  void reset() {
+    ledger = null;
+    loadedEntries.clear();
+    weightEntryMap.map.clear();
   }
 
   WeightEntry? get latestEntry =>
@@ -120,10 +130,12 @@ class WeightEntryBloc extends Bloc {
 
     final newLoadedEntries = await weightEntryMap.loadModelIds(entryKeys);
 
-    newLoadedEntries.forEach((element) {
-      loadedEntries.add(element.id!);
-      _addedWeight.sink.add(loadedEntries.length - 1);
-    });
+    newLoadedEntries.forEach(
+      (element) {
+        loadedEntries.add(element.id!);
+        _addedWeight.sink.add(loadedEntries.length - 1);
+      },
+    );
 
     sortEntriesByDate();
 

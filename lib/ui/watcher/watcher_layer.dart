@@ -1,4 +1,5 @@
 import 'package:event_ads/event_ads.dart';
+import 'package:event_alert/event_alert_widgets.dart';
 import 'package:flutter/material.dart';
 
 class WatcherLayer extends StatelessWidget {
@@ -8,6 +9,10 @@ class WatcherLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LoadingAdWatcher(child: child);
+    return LoadingAdWatcher(
+      child: AlertWatcher(
+        child: child,
+      ),
+    );
   }
 }

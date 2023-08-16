@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
+import 'package:weight_blade/bloc/import_export.dart';
 import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/bloc_builders.dart';
 import 'package:weight_blade/event/ledger.dart';
@@ -12,6 +13,7 @@ import 'package:weight_blade/event/reminder.dart';
 import 'package:weight_blade/event/settings.dart';
 import 'package:weight_blade/main_transfer.dart';
 import 'package:weight_blade/repository_builders.dart';
+import 'package:weight_blade/ui/import-export/screen.dart';
 import 'package:weight_blade/ui/watcher/watcher_layer.dart';
 
 void main() {
@@ -60,16 +62,41 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  Widget build(BuildContext context) {
+    final bloc = context.watchBloc<ImportExportBloc>();
+    return FadeThroughWidgetSwitcher(
+      duration: const Duration(milliseconds: 1000),
+      builder: (_) => bloc.showImportExportScreen
+          ? const ImportExportScreen()
+          : const MainParentScreen(),
+    );
+  }
 }
 
-class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
-  late final _loading = GlobalKey(debugLabel: "Initial Loading");
-  late final _main = GlobalKey(debugLabel: "Main Parent");
+class MainParentScreen extends StatefulWidget {
+  const MainParentScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MainParentScreen> createState() => _MainParentScreenState();
+}
+
+class _LoadingScreen extends StatelessWidget {
+  const _LoadingScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: CupertinoActivityIndicator()),
+    );
+  }
+}
+
+class _MainParentScreenState extends State<MainParentScreen>
+    with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -86,18 +113,29 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    context.fireEvent<void>(LedgerEvent.loadLedger.event, null);
-    context.fireEvent<void>(ReminderEvent.loadReminder.event, null);
-    context.fireEvent<void>(SettingsEvent.loadSettings.event, null);
+    context
+      ..fireEvent<void>(
+        LedgerEvent.loadLedger.event,
+        null,
+        withDelay: true,
+      )
+      ..fireEvent<void>(
+        ReminderEvent.loadReminder.event,
+        null,
+        withDelay: true,
+      )
+      ..fireEvent<void>(
+        SettingsEvent.loadSettings.event,
+        null,
+        withDelay: true,
+      );
   }
 
   Widget buildWidget(BuildContext context) {
     final bloc = context.watchBloc<WeightEntryBloc>();
 
     if (bloc.loading) {
-      return Scaffold(
-          key: _loading,
-          body: const Center(child: CupertinoActivityIndicator()));
+      return const _LoadingScreen();
     }
     final navBloc = context.watchBloc<MainNavigationBloc<String>>();
 
@@ -120,7 +158,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     );
 
     return Scaffold(
-      key: _main,
       bottomNavigationBar: navigationBar,
       body: const MainTransferScreen(),
     );

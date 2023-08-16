@@ -16,15 +16,16 @@ dependencies:
   carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.2
 
+  event_alert: ^0.1.1
   event_essay: ^0.1.0
-  event_bloc: ^4.3.2
+  event_bloc: ^4.6.0
   event_db: ^0.1.5
   # event_db:
   #   path: ../event_db
   event_hive: ^0.1.4
   # event_hive:
   #   path: ../event_hive
-  event_navigation: ^0.6.2
+  event_navigation: ^0.6.6
   # event_navigation:
   #   path: ../event-navigation
   event_ads: ^0.2.0

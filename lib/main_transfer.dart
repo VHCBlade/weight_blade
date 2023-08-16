@@ -14,22 +14,21 @@ class MainTransferScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainNavigationFullScreenCarousel(
-        navigationOptions: const ["weigh", "graph", "reminder", "settings"],
-        navigationBuilder: (_, navigation) {
-          switch (navigation) {
-            case 'weigh':
-              return const WeightScreen();
-            case 'graph':
-              return const GraphScreen();
-            case 'settings':
-              return const SettingsScreen();
-            case 'reminder':
-              return kIsWeb
-                  ? const WebRemindersScreen()
-                  : const ReminderScreen();
-            default:
-              return const ComingSoonScreen();
-          }
-        });
+      navigationOptions: const ["weigh", "graph", "reminder", "settings"],
+      navigationBuilder: (_, navigation) {
+        switch (navigation) {
+          case 'weigh':
+            return const WeightScreen();
+          case 'graph':
+            return const GraphScreen();
+          case 'settings':
+            return const SettingsScreen();
+          case 'reminder':
+            return kIsWeb ? const WebRemindersScreen() : const ReminderScreen();
+          default:
+            return const ComingSoonScreen();
+        }
+      },
+    );
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:vhcblade_theme/vhcblade_picker.dart';
 import 'package:vhcblade_theme/vhcblade_widget.dart';
 import 'package:weight_blade/bloc/settings/extension.dart';
+import 'package:weight_blade/event/weight.dart';
 import 'package:weight_blade/ui/settings/ad.dart';
 import 'package:weight_blade/ui/settings/convert.dart';
 import 'package:weight_blade/ui/settings/delete.dart';
@@ -75,6 +76,10 @@ class SettingsPage extends StatelessWidget {
                   "https://play.google.com/store/apps/details?id=com.vhcblade.weight_blade&hl=en_US&gl=US"),
             ),
           const ListTile(title: Text("Change Settings"), selected: true),
+          ListTile(
+              title: const Text("Import / Export Weight Entries"),
+              onTap: () => context.fireEvent(
+                  WeightEvent.showImportExportScreen.event, true)),
           const DeleteConfirmationSettings(),
           const AutomaticallyConverUnitsSetting(),
           ListTile(

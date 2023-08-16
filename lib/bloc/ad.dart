@@ -32,24 +32,27 @@ class AdBloc extends Bloc {
       {required super.parentChannel,
       required this.repository,
       required this.settingsGetter}) {
-    eventChannel.addEventListener<void>(
-        LedgerEvent.loadLedger.event,
-        (p0, p1) async => adModel = await repository.findModel<AdModel>(
-                weightDb, adModelKey) ??
-            AdModel()
-          ..id = adModelKey);
-    eventChannel.addEventListener<WeightEntry>(WeightEvent.addWeightEntry.event,
+    eventChannel
+      ..addEventListener<void>(
+          LedgerEvent.loadLedger.event,
+          (p0, p1) async => adModel = await repository.findModel<AdModel>(
+                  weightDb, adModelKey) ??
+              AdModel()
+            ..id = adModelKey)
+      ..addEventListener<WeightEntry>(
+        WeightEvent.addWeightEntry.event,
         (p0, p1) {
-      final settings = settingsGetter();
-      if (!settings.enableAdsAppWide) {
-        return;
-      }
-      adModel.weightCount = adModel.weightCount + 1;
+          final settings = settingsGetter();
+          if (!settings.enableAdsAppWide) {
+            return;
+          }
+          adModel.weightCount = adModel.weightCount + 1;
 
-      if (adModel.weightCount % settings.showAdEveryNEntries == 0) {
-        eventChannel.fireEvent(AdEvent.showAd.event, null);
-      }
-      repository.saveModel(weightDb, adModel);
-    });
+          if (adModel.weightCount % settings.showAdEveryNEntries == 0) {
+            eventChannel.fireEvent(AdEvent.showAd.event, null);
+          }
+          repository.saveModel(weightDb, adModel);
+        },
+      );
   }
 }

@@ -1,8 +1,10 @@
+import 'package:event_alert/event_alert_widgets.dart';
 import 'package:event_bloc/event_bloc_widgets.dart';
 import 'package:event_db/event_db.dart';
 import 'package:event_navigation/event_navigation.dart';
 import 'package:weight_blade/bloc/ad.dart';
 import 'package:weight_blade/bloc/goal.dart';
+import 'package:weight_blade/bloc/import_export.dart';
 import 'package:weight_blade/bloc/navigation/navigation.dart';
 import 'package:weight_blade/bloc/reminder.dart';
 import 'package:weight_blade/bloc/settings/settings.dart';
@@ -10,8 +12,17 @@ import 'package:weight_blade/bloc/weight_entry.dart';
 import 'package:weight_blade/repository/notifications/repo.dart';
 
 final blocBuilders = [
+  BlocBuilder<AlertBloc>(
+    (read, channel) => AlertBloc(parentChannel: channel),
+  ),
   BlocBuilder<MainNavigationBloc<String>>(
       (read, channel) => generateNavigationBloc(parentChannel: channel)),
+  BlocBuilder<ImportExportBloc>(
+    (read, channel) => ImportExportBloc(
+      parentChannel: channel,
+      database: read.read<DatabaseRepository>(),
+    ),
+  ),
   BlocBuilder<WeightEntryBloc>((read, channel) => WeightEntryBloc(
       parentChannel: channel, database: read.read<DatabaseRepository>())),
   BlocBuilder<WeightGoalBloc>((read, channel) => WeightGoalBloc(

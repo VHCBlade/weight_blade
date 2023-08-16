@@ -15,10 +15,15 @@ class AlarmNotificationRepository extends NotificationRepository {
     super.initialize(channel);
   }
 
-  @override
-  Future<bool> disableNotifications(Reminder? reminder) async {
+  Future<bool> _disableAlarms() async {
     await Future.wait(
         Alarm.getAlarms().map((element) => Alarm.stop(element.id)));
+    return true;
+  }
+
+  @override
+  Future<bool> disableNotifications(Reminder? reminder) async {
+    await _disableAlarms();
     return await wrapped?.disableNotifications(reminder) ?? true;
   }
 
@@ -33,22 +38,26 @@ class AlarmNotificationRepository extends NotificationRepository {
 
   @override
   Future<bool> setReminder(Reminder? reminder) async {
-    if (reminder?.enabledAlarm ?? false) {
-      for (final day in {...reminder!.daysOfTheWeek}) {
-        // TODO: WB-20 This alarm option doesn't work. It always plays the alarm at the closest possible date.
-        final nextTime = day.getNextTime(reminder.timeOfDay);
-        await Alarm.set(
-          alarmSettings: AlarmSettings(
-            id: day.count + 100,
-            dateTime: nextTime,
-            notificationTitle: "Weigh-in Reminder",
-            notificationBody: "Time to weigh in!",
-            fadeDuration: 20,
-            assetAudioPath: "",
-          ),
-        );
-      }
+    final enabledAlarm = reminder?.enabledAlarm ?? false;
+    if (!enabledAlarm) {
+      await _disableAlarms();
+      return await wrapped?.setReminder(reminder) ?? true;
     }
-    return await wrapped?.setReminder(reminder) ?? true;
+    await wrapped?.disableNotifications(reminder);
+    for (final day in {...reminder!.daysOfTheWeek}) {
+      final nextTime = day.getNextTime(reminder.timeOfDay);
+      await Alarm.set(
+        alarmSettings: AlarmSettings(
+          id: day.count + 100,
+          dateTime: nextTime,
+          notificationTitle: "Weigh-in Reminder",
+          notificationBody: "Time to weigh in!",
+          fadeDuration: 20,
+          assetAudioPath: "assets/music/c-chord.mp4",
+          loopAudio: false,
+        ),
+      );
+    }
+    return true;
   }
 }

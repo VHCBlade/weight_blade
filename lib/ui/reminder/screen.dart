@@ -28,15 +28,16 @@ class ReminderScreen extends StatelessWidget {
                           ReminderEvent.enableReminder.event, val)),
                 ),
                 const SizedBox(height: 20),
-                // TODO: WB-20 This alarm option doesn't work. It always plays the alarm at the closest possible date.
-                // ListTile(
-                //   title: const Text("Play Alarm"),
-                //   trailing: CupertinoSwitch(
-                //       value: bloc.reminder!.enabledAlarm,
-                //       onChanged: (val) => context.fireEvent(
-                //           ReminderEvent.updateReminder.event,
-                //           bloc.reminder!..enabledAlarm = val)),
-                // ),
+                ListTile(
+                  title: const Text("Play Sound"),
+                  trailing: CupertinoSwitch(
+                    value: bloc.reminder!.enabledAlarm,
+                    onChanged: (val) => context.fireEvent(
+                      ReminderEvent.updateReminder.event,
+                      bloc.reminder!..enabledAlarm = val,
+                    ),
+                  ),
+                ),
                 ListTile(
                   title: const Text("Notification Time"),
                   trailing: ElevatedButton(

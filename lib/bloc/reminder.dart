@@ -44,6 +44,8 @@ class ReminderBloc extends Bloc {
     if (reminder!.enabled) {
       await notificationsRepository.enableNotifications();
       await notificationsRepository.setReminder(reminder);
+    } else {
+      await notificationsRepository.disableNotifications(reminder);
     }
   }
 

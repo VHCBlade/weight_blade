@@ -10,6 +10,12 @@ enum WeightEvent<T> {
 
   reset<void>(),
   showImportExportScreen<bool>(),
+  export<void>(),
+  exportedJson<String>(),
+  finishExport<void>(),
+  startImport<void>(),
+  import<String>(),
+  finishImport<void>(),
   ;
 
   BlocEventType<T> get event => BlocEventType.fromObject(this);

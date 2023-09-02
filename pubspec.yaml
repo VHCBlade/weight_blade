@@ -34,6 +34,9 @@ dependencies:
   event_modals: ^0.1.0
   # event_modals:
   #   path: ../vhcblade_modals
+
+  file_picker: ^5.3.3
+  file_saver: ^0.2.8
   fluttertoast: ^8.2.2
 
   vhcblade_theme: ^0.2.3
@@ -45,6 +48,7 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   flutter_local_notifications: ^14.0.0
   google_mobile_ads: ^3.0.0
+  path_provider: ^2.0.0
   
   intl: ^0.18.0
   math_parser: ^1.5.0

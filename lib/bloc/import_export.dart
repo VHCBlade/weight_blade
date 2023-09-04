@@ -45,6 +45,7 @@ class ImportExportBloc extends Bloc {
   ImportExportState state = ImportExportState.idle;
 
   final DatabaseRepository database;
+  late final specificDb = SpecificDatabase(database, weightDb);
 
   bool showImportExportScreen = false;
 
@@ -70,8 +71,14 @@ class ImportExportBloc extends Bloc {
     state = ImportExportState.exporting;
     updateBloc();
 
-    weightEntries
-        .addAll(await database.findAllModelsOfType(weightDb, WeightEntry.new));
+    final ledger = await specificDb.findModel<Ledger>(ledgerKey);
+
+    weightEntries.addAll(await specificDb.findAllModelsOfType(WeightEntry.new));
+
+    if (ledger != null && weightEntries.length < ledger.entries.length) {
+      updateIdOfOldWeightEntries(ledger);
+    }
+
     final encodedJson =
         json.encode(weightEntries.map((e) => e.toMap()).toList());
 
@@ -80,6 +87,33 @@ class ImportExportBloc extends Bloc {
       encodedJson,
     );
     weightEntries.clear();
+  }
+
+  Future<void> updateIdOfOldWeightEntries(Ledger ledger) async {
+    weightEntries.clear();
+    final currentWeightEntries = await specificDb.findModels(ledger.entries);
+
+    final newWeightEntries = await Future.wait(
+      currentWeightEntries.map(
+        (e) async {
+          specificDb.deleteModel(e);
+          return e..idSuffix = e.idSuffix;
+        },
+      ),
+    );
+    await specificDb.saveModels(newWeightEntries);
+    await reorderLedger(ledger);
+  }
+
+  Future<void> reorderLedger(Ledger ledger) async {
+    weightEntries.addAll(
+        (await database.findAllModelsOfType(weightDb, WeightEntry.new)));
+    weightEntries.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    ledger.entries
+      ..clear()
+      ..addAll([...weightEntries.map((e) => e.id!)]);
+
+    await specificDb.saveModel(ledger);
   }
 
   void finishExport() {
@@ -119,16 +153,10 @@ class ImportExportBloc extends Bloc {
       final weightLogs =
           weightLogsMap.map((e) => WeightEntry()..loadFromMap(e));
       await database.saveModels(weightDb, weightLogs);
-      final ledger = await database.findModel<Ledger>(weightDb, ledgerKey);
-      final weightEntries =
-          (await database.findAllModelsOfType(weightDb, WeightEntry.new))
-              .toList();
-      weightEntries.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-      ledger!.entries
-        ..clear()
-        ..addAll([...weightEntries.map((e) => e.id!)]);
-
-      await database.saveModel(weightDb, ledger);
+      final ledger =
+          (await database.findModel<Ledger>(weightDb, ledgerKey)) ?? Ledger()
+            ..id = ledgerKey;
+      await reorderLedger(ledger);
 
       eventChannel.fireAlert('Finished Importing Weight Entries!');
     } on Object {

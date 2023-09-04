@@ -23,38 +23,46 @@ class ImportExportScreen extends StatefulWidget {
 class _ImportExportScreenState extends State<ImportExportScreen> {
   late final BlocEventListener<dynamic> listener;
 
+  void finishExport(String jsonString) async {
+    final eventChannel = context.eventChannel;
+    final filePath = Platform.isAndroid ? '/storage/emulated/0/Download' : null;
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        final result = await FileSaver.instance.saveAs(
+          name: '${_dateFormatter.format(DateTime.now())}-weight-entries',
+          ext: 'json',
+          mimeType: MimeType.json,
+          bytes: Uint8List.fromList(utf8.encode(jsonString)),
+          filePath: filePath,
+        );
+
+        if (result == null) {
+          return;
+        }
+      } else {
+        await FileSaver.instance.saveFile(
+          name: '${_dateFormatter.format(DateTime.now())}-weight-entries',
+          ext: 'json',
+          mimeType: MimeType.json,
+          bytes: Uint8List.fromList(utf8.encode(jsonString)),
+          filePath: filePath,
+        );
+      }
+
+      eventChannel.fireAlert(
+        'Successfully Exported Weight Entries!\n\nTransfer the created file to the device you want to Import the Weight Entries.',
+      );
+    } finally {
+      eventChannel.fireEvent(WeightEvent.finishExport.event, null);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     listener = context.eventChannel.eventBus.addEventListener<String>(
       WeightEvent.exportedJson.event,
-      (event, value) async {
-        final eventChannel = context.eventChannel;
-        final filePath =
-            Platform.isAndroid ? '/storage/emulated/0/Download' : null;
-        if (Platform.isAndroid || Platform.isIOS) {
-          await FileSaver.instance.saveAs(
-            name: '${_dateFormatter.format(DateTime.now())}-weight-entries',
-            ext: 'json',
-            mimeType: MimeType.json,
-            bytes: Uint8List.fromList(utf8.encode(value)),
-            filePath: filePath,
-          );
-        } else {
-          await FileSaver.instance.saveFile(
-            name: '${_dateFormatter.format(DateTime.now())}-weight-entries',
-            ext: 'json',
-            mimeType: MimeType.json,
-            bytes: Uint8List.fromList(utf8.encode(value)),
-            filePath: filePath,
-          );
-        }
-
-        eventChannel.fireEvent(WeightEvent.finishExport.event, null);
-        eventChannel.fireAlert(
-          'Successfully Exported Weight Entries!\n\nTransfer the created file to the device you want to Import the Weight Entries.',
-        );
-      },
+      (event, value) => finishExport(value),
     );
   }
 

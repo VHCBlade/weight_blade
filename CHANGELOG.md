@@ -1,4 +1,4 @@
-## 1.7.1+5 
+## 1.8.0+5 - September 4, 2023
 
 - Added option to play sound for the weigh-in reminders
 - Added import and export  
